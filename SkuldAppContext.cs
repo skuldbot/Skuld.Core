@@ -54,26 +54,6 @@ namespace Skuld.Core
         public static readonly KeyValuePair<AssemblyName, GitRepoStruct> Skuld = new KeyValuePair<AssemblyName, GitRepoStruct>(
             Assembly.GetEntryAssembly().GetName(),
             new GitRepoStruct("Skuldbot", "Skuld"));
-
-        public static readonly KeyValuePair<AssemblyName, GitRepoStruct> SysEx = new KeyValuePair<AssemblyName, GitRepoStruct>(
-            Assembly.GetAssembly(typeof(SysExClient)).GetName(),
-            new GitRepoStruct("exsersewo", "SysEx.Net"));
-
-        public static readonly KeyValuePair<AssemblyName, GitRepoStruct> Booru = new KeyValuePair<AssemblyName, GitRepoStruct>(
-            Assembly.GetAssembly(typeof(BooruClient)).GetName(),
-            new GitRepoStruct("exsersewo", "Booru.Net"));
-
-        public static readonly KeyValuePair<AssemblyName, GitRepoStruct> Weebsh = new KeyValuePair<AssemblyName, GitRepoStruct>(
-            Assembly.GetAssembly(typeof(WeebClient)).GetName(),
-            new GitRepoStruct("Daniele122898", "Weeb.net"));
-
-        public static readonly KeyValuePair<AssemblyName, GitRepoStruct> Twitch = new KeyValuePair<AssemblyName, GitRepoStruct>(
-            Assembly.GetAssembly(typeof(TwitchHelixClient)).GetName(),
-            new GitRepoStruct("Akitaux", "Twitch"));
-
-        public static readonly KeyValuePair<AssemblyName, GitRepoStruct> Imghoard = new KeyValuePair<AssemblyName, GitRepoStruct>(
-            Assembly.GetAssembly(typeof(ImghoardClient)).GetName(),
-            new GitRepoStruct("Mikibot", "dotnet-miki-api"));
     }
 
     public class MemoryStats
