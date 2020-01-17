@@ -1,15 +1,11 @@
-﻿using Akitaux.Twitch.Helix;
-using Booru.Net;
+﻿using Booru.Net;
 using Discord;
-using Miki.API.Images;
-using SysEx.Net;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Weeb.net;
 
 namespace Skuld.Core
 {
