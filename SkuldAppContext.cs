@@ -1,5 +1,4 @@
-﻿using Booru.Net;
-using Discord;
+﻿using Discord;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
