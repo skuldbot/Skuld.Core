@@ -1,29 +1,13 @@
 ﻿using Discord;
 using Skuld.Core.Extensions;
-using System;
 using System.Text.RegularExpressions;
 
 namespace Skuld.Core.Utilities
 {
     public static class DiscordUtilities
     {
-        #region Status Emotes
-
-        public static readonly Emote Streaming_Emote = Emote.Parse("<:streaming:614849478926794752>");
-        public static readonly Emote Online_Emote = Emote.Parse("<:online:614849479161544751>");
-        public static readonly Emote Idle_Emote = Emote.Parse("<:away:614849478847102986>");
-        public static readonly Emote DoNotDisturb_Emote = Emote.Parse("<:dnd:614849478482198528>");
-        public static readonly Emote Offline_Emote = Emote.Parse("<:offline:614849478758760479>");
-
-        #endregion Status Emotes
-
-        #region Emotes
-
-        public static readonly Emote Tick_Emote = Emote.Parse("<:tick:667153179175157760>");
-        public static readonly Emote Cross_Emote = Emote.Parse("<:cross:667153179154186278>");
-        public static Emote Empty_Emote = Emote.Parse("<:empty:663083920992239638>");
-
-        #endregion Emotes
+        public const double PHI = 1.618;
+        public static GuildPermissions ModeratorPermissions = new GuildPermissions(268443650);
 
         #region Response Emojis
 
@@ -39,7 +23,25 @@ namespace Skuld.Core.Utilities
 
         #endregion Response Emojis
 
-        #region TwitchEmotes
+        #region Status Emotes
+
+        public static readonly Emote Streaming_Emote = Emote.Parse("<:streaming:614849478926794752>");
+        public static readonly Emote Online_Emote = Emote.Parse("<:online:614849479161544751>");
+        public static readonly Emote Idle_Emote = Emote.Parse("<:away:614849478847102986>");
+        public static readonly Emote DoNotDisturb_Emote = Emote.Parse("<:dnd:614849478482198528>");
+        public static readonly Emote Offline_Emote = Emote.Parse("<:offline:614849478758760479>");
+
+        #endregion Status Emotes
+
+        #region Embed Colours
+
+        public static readonly Color Ok_Color = "#339966".FromHex();
+        public static readonly Color Warning_Color = "#FFFF00".FromHex();
+        public static readonly Color Failed_Color = "#FF0000".FromHex();
+
+        #endregion Embed Colours
+
+        #region Twitch Emotes
 
         public static readonly Emote TwitchAdmins = Emote.Parse("<:TwitchAdmins:552666767609036825>");
         public static readonly Emote TwitchAffiliate = Emote.Parse("<:TwitchAffiliate:552666767630008354>");
@@ -52,9 +54,9 @@ namespace Skuld.Core.Utilities
         public static readonly Emote TwitchVIP = Emote.Parse("<:TwitchVIP:552666767416360971>");
         public static readonly Emote TwitchGlobalMod = Emote.Parse("<:TwitchGlobalMod:552668468877590538>");
 
-        #endregion TwitchEmotes
+        #endregion Twitch Emotes
 
-        #region NitroEmotes
+        #region Nitro Emotes
 
         public static readonly Emote NitroBoostEmote = Emote.Parse("<:boost:614875223417684126>");
         public static readonly Emote NitroBoostRank1Emote = Emote.Parse("<:boostrank1:614875835123499212>");
@@ -62,29 +64,9 @@ namespace Skuld.Core.Utilities
         public static readonly Emote NitroBoostRank3Emote = Emote.Parse("<:boostrank3:614875835102658560>");
         public static readonly Emote NitroBoostRank4Emote = Emote.Parse("<:boostrank4:614875835249197076>");
 
-        #endregion NitroEmotes
+        #endregion Nitro Emotes
 
-        #region Embed Colours
-
-        public static readonly Color Ok_Color = "#339966".FromHex();
-        public static readonly Color Warning_Color = "#FFFF00".FromHex();
-        public static readonly Color Failed_Color = "#FF0000".FromHex();
-
-        #endregion Embed Colours
-
-        public const double PHI = 1.618;
-
-        #region Regex
-
-        public static Regex UserMentionRegex = new Regex("<@.?[0-9]*?>");
-        public static Regex RoleMentionRegex = new Regex("<&[0-9]*?>");
-        public static Regex ChannelMentionRegex = new Regex("<#[0-9]*?>");
-
-        #endregion Regex
-
-        public static GuildPermissions ModeratorPermissions = new GuildPermissions(268443650);
-
-        #region BoostIcons
+        #region Boost Icons
 
         public static string Level1ServerBoost = "server/level1.svg";
         public static string Level2ServerBoost = "server/level2.svg";
@@ -94,41 +76,7 @@ namespace Skuld.Core.Utilities
         public static string Level2UserBoost = "profile/level2.svg";
         public static string Level3UserBoost = "profile/level3.svg";
 
-        #endregion BoostIcons
-
-        #region Levels
-
-        public static ulong GetXPLevelRequirement(ulong level, double growthmod)
-            => (ulong)Math.Round(Math.Pow(level, 2) * 50 * growthmod, MidpointRounding.AwayFromZero);
-
-        public static ulong GetLevelFromTotalXP(ulong totalxp, double growthmod)
-            => (ulong)(Math.Sqrt(totalxp / (50 * growthmod)));
-
-        /// <summary>
-        /// Gets the experience multiplier from Users Minutes in Voice
-        /// </summary>
-        /// <param name="expIndeterminate">Indeterminate Value for parabola</param>
-        /// <param name="minMinutes">Minimum Minutes In voice</param>
-        /// <param name="maxExperience">Maximum XP to grant</param>
-        /// <param name="timeInVoice">Users time in voice by minutes</param>
-        /// <returns></returns>
-        public static int GetExpMultiFromMinutesInVoice(float expDeterminate, ulong minMinutes, ulong maxExperience, ulong timeInVoice)
-        {
-            if (timeInVoice < minMinutes)
-                return 0; //if less than minimum minutes return 0 multiplier
-
-            var result = Math.Pow(expDeterminate * (timeInVoice - minMinutes), 2); //do math
-
-            if (result > maxExperience)
-                result = maxExperience; //clamp to 100 as limit
-
-            if (result < 0)
-                result = 0; //if negative clamp to zero
-
-            return (int)Math.Round(result); //return rounded integral version of result
-        }
-
-        #endregion Levels
+        #endregion Boost Icons
 
         #region User Flags
 
@@ -140,5 +88,21 @@ namespace Skuld.Core.Utilities
         public const ulong NormalUser = 0;
 
         #endregion User Flags
+
+        #region Emotes
+
+        public static readonly Emote Tick_Emote = Emote.Parse("<:tick:667153179175157760>");
+        public static readonly Emote Cross_Emote = Emote.Parse("<:cross:667153179154186278>");
+        public static Emote Empty_Emote = Emote.Parse("<:empty:663083920992239638>");
+
+        #endregion Emotes
+
+        #region Regex
+
+        public static Regex UserMentionRegex = new Regex("<@.?[0-9]*?>");
+        public static Regex RoleMentionRegex = new Regex("<&[0-9]*?>");
+        public static Regex ChannelMentionRegex = new Regex("<#[0-9]*?>");
+
+        #endregion Regex
     }
 }
