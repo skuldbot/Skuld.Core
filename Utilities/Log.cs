@@ -1,5 +1,6 @@
 ﻿using Discord;
-using Skuld.Core.Extensions;
+using Skuld.Core.Extensions.Conversion;
+using Skuld.Core.Extensions.Formatting;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
