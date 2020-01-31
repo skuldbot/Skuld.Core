@@ -78,17 +78,19 @@ namespace Skuld.Core.Utilities
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-                LogFile.WriteLine(m);
-
                 if (SkuldAppContext.GetLogLevel() >= LogSeverity.Debug)
+                {
                     Console.Out.WriteLine(m);
+                    LogFile.WriteLine(m);
+                }
             }
             else
             {
-                LogFile.WriteLine(msg);
-
                 if (SkuldAppContext.GetLogLevel() >= LogSeverity.Debug)
+                {
                     Console.Out.WriteLine(msg);
+                    LogFile.WriteLine(msg);
+                }
             }
 
             Console.ForegroundColor = ConsoleColor.White;
@@ -123,19 +125,21 @@ namespace Skuld.Core.Utilities
         {
             var msg = Message(source, message, LogSeverity.Verbose);
 
-            if (exception != null)
-            {
-                var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
-
-                LogFile.WriteLine(m);
-            }
-            else
-            {
-                LogFile.WriteLine(msg);
-            }
-
             if (SkuldAppContext.GetLogLevel() >= LogSeverity.Verbose)
+            {
                 Console.Out.WriteLine(msg);
+
+                if (exception != null)
+                {
+                    var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
+
+                    LogFile.WriteLine(m);
+                }
+                else
+                {
+                    LogFile.WriteLine(msg);
+                }
+            }
 
             Console.ForegroundColor = ConsoleColor.White;
 
