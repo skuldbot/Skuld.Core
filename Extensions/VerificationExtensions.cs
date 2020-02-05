@@ -56,7 +56,7 @@ namespace Skuld.Core.Extensions.Verification
         }
 
         public static bool IsWebsite(this string input)
-            => Uri.TryCreate(input, UriKind.RelativeOrAbsolute, out _);
+            => Uri.TryCreate(input, UriKind.Absolute, out _);
 
         public static bool IsRecurring(this ulong val, int startLimit)
         {
