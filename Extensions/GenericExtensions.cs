@@ -51,6 +51,15 @@ namespace Skuld.Core.Extensions
             }
         }
 
+        public static int FindIndex<T>(this IReadOnlyList<T> collection, Predicate<T> match)
+            => collection.ToArray().FindIndex(match);
+
+        public static int FindIndex<T>(this IReadOnlyCollection<T> collection, Predicate<T> match)
+            => collection.ToArray().FindIndex(match);
+
+        public static int FindIndex<T, Y>(this IReadOnlyDictionary<T, Y> collection, Predicate<KeyValuePair<T, Y>> match)
+            => collection.ToArray().FindIndex(match);
+
         #region DateTime
 
         public static int MonthsBetween(this DateTime date1, DateTime date2)
