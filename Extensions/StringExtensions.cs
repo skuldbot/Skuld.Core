@@ -107,6 +107,18 @@ namespace Skuld.Bot.Extensions
             return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
         }
 
+        //https://stackoverflow.com/a/14826068
+        public static string ReplaceLast(this string text, string search, string replace)
+        {
+            int place = text.LastIndexOf(search);
+
+            if (place == -1)
+                return text;
+
+            string result = text.Remove(place, search.Length).Insert(place, replace);
+            return result;
+        }
+
         public static string ToFormattedString(this ulong Value)
             => Value.ToString("N0");
         public static string ToFormattedString(this long Value)

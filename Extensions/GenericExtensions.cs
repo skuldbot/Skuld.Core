@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -26,14 +25,11 @@ namespace Skuld.Core.Extensions
             }
         }
 
-        public static T RandomValue<T>(this IEnumerable<T> entries, Random random = null) where T : class
+        public static T RandomValue<T>(this IEnumerable<T> entries) where T : class
         {
-            if (random == null)
-                random = new Random((int)Math.Clamp(Process.GetCurrentProcess().StartTime.ToEpoch(), 0, int.MaxValue));
-
             var list = entries.ToList();
 
-            var index = random.Next(0, list.Count);
+            var index = SkuldRandom.Next(0, list.Count);
 
             return list[index];
         }
@@ -51,14 +47,6 @@ namespace Skuld.Core.Extensions
             }
         }
 
-        public static int FindIndex<T>(this IReadOnlyList<T> collection, Predicate<T> match)
-            => collection.ToArray().FindIndex(match);
-
-        public static int FindIndex<T>(this IReadOnlyCollection<T> collection, Predicate<T> match)
-            => collection.ToArray().FindIndex(match);
-
-        public static int FindIndex<T, Y>(this IReadOnlyDictionary<T, Y> collection, Predicate<KeyValuePair<T, Y>> match)
-            => collection.ToArray().FindIndex(match);
 
         #region DateTime
 
