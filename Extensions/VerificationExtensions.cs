@@ -74,6 +74,5 @@ namespace Skuld.Core.Extensions.Verification
 
         public static bool IsBitSet(this ulong i, ulong shifted)
             => (i & shifted) != 0;
-
     }
 }

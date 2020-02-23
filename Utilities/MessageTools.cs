@@ -1,5 +1,4 @@
-﻿using Discord.Commands;
-using Discord.WebSocket;
+﻿using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 using DiscordNet = Discord;
@@ -28,9 +27,9 @@ namespace Skuld.Core.Utilities
         {
             string result = null;
 
-            foreach(var prefix in prefixes)
+            foreach (var prefix in prefixes)
             {
-                if(command.StartsWith(prefix))
+                if (command.StartsWith(prefix))
                 {
                     result = prefix;
                     break;
@@ -45,7 +44,7 @@ namespace Skuld.Core.Utilities
             string cmdname = message.Content;
 
             if (cmdname.StartsWith(prefix))
-            { 
+            {
                 cmdname = cmdname.Remove(0, prefix.Length);
             }
 

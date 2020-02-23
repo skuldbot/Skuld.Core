@@ -44,6 +44,5 @@ namespace Skuld.Core.Extensions.Conversion
 
         public static double Remap(this double value, double min1, double max1, double min2, double max2)
             => min2 + (max2 - min2) * ((value - min1) / (max1 - min1));
-
     }
 }

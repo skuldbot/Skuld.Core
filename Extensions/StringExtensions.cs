@@ -121,10 +121,13 @@ namespace Skuld.Bot.Extensions
 
         public static string ToFormattedString(this ulong Value)
             => Value.ToString("N0");
+
         public static string ToFormattedString(this long Value)
             => Value.ToString("N0");
+
         public static string ToFormattedString(this int Value)
             => Value.ToString("N0");
+
         public static string ToFormattedString(this uint Value)
             => Value.ToString("N0");
 

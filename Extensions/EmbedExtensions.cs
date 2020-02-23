@@ -28,19 +28,19 @@ namespace Skuld.Core.Extensions
             => FromMessage(title, message, Color.Red, context);
 
         public static EmbedBuilder FromError(string message, ICommandContext context)
-            => FromMessage("⛔Command Error!⛔", message, Color.Red, context);
+            => FromMessage("⛔ Command Error! ⛔", message, Color.Red, context);
 
         public static EmbedBuilder FromInfo(string title, string message, ICommandContext context)
             => FromMessage(title, message, DiscordUtilities.Warning_Color, context);
 
         public static EmbedBuilder FromInfo(string message, ICommandContext context)
-            => FromMessage("⚠Info⚠", message, DiscordUtilities.Warning_Color, context);
+            => FromMessage("⚠ Info ⚠", message, DiscordUtilities.Warning_Color, context);
 
         public static EmbedBuilder FromSuccess(ICommandContext context)
-            => FromMessage("✔Success✔", "", Color.Green, context);
+            => FromMessage("✔ Success ✔", "", Color.Green, context);
 
         public static EmbedBuilder FromSuccess(string message, ICommandContext context)
-            => FromMessage("✔Success✔", message, Color.Green, context);
+            => FromMessage("✔ Success ✔", message, Color.Green, context);
 
         public static EmbedBuilder FromSuccess(string title, string message, ICommandContext context)
             => FromMessage(title, message, Color.Green, context);
@@ -67,7 +67,7 @@ namespace Skuld.Core.Extensions
         public static EmbedBuilder WithRandomColor(this EmbedBuilder builder)
             => builder.WithColor(RandomEmbedColor());
 
-        public static Color RandomEmbedColor(int seed = 0)
+        public static Color RandomEmbedColor()
         {
             var bytes = new byte[3];
 

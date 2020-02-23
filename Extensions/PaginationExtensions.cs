@@ -43,6 +43,5 @@ namespace Skuld.Core.Extensions.Pagination
 
             return pages;
         }
-
     }
 }

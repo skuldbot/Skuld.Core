@@ -38,6 +38,5 @@ namespace Skuld.Core.Extensions.Localisation
 
         public static string CheckEmptyWithLocale(this string val, ResourceManager loc)
             => val ?? loc.GetString("SKULD_GENERIC_EMPTY");
-
     }
 }

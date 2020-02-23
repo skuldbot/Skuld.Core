@@ -1,6 +1,5 @@
 ﻿using Discord;
-using NodaTime;
-using Skuld.Core.Extensions.Formatting;
+using Discord.WebSocket;
 using Skuld.Core.Utilities;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,31 @@ namespace Skuld.Core.Extensions
 {
     public static class DiscordExtensions
     {
+        #region Conversions
+
+        public static Color FromHex(this string hex)
+        {
+            var col = System.Drawing.ColorTranslator.FromHtml(hex);
+            return new Color(col.R, col.G, col.B);
+        }
+
+        public static string ToHex(this Color color)
+            => System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.FromArgb(255, color.R, color.G, color.B));
+
+        public static string ToEmoji(this ClientType client)
+         => client switch
+         {
+             ClientType.Desktop => "🖥️",
+             ClientType.Mobile => "📱",
+             ClientType.Web => "🔗",
+
+             _ => "🖥️",
+         };
+
+        #endregion Conversions
+
+        #region Information
+
         public static string FullName(this IUser usr)
             => $"{usr.Username}#{usr.Discriminator}";
 
@@ -22,15 +46,29 @@ namespace Skuld.Core.Extensions
             else
                 return $"{usr.Username} ({usr.Nickname})#{usr.Discriminator}";
         }
-        
-        public static Color FromHex(this string hex)
+
+        public static async Task<int> RobotMembersAsync(this IGuild guild)
         {
-            var col = System.Drawing.ColorTranslator.FromHtml(hex);
-            return new Color(col.R, col.G, col.B);
+            await guild.DownloadUsersAsync().ConfigureAwait(false);
+
+            return (await guild.GetUsersAsync(CacheMode.AllowDownload)).Count(x => x.IsBot);
         }
 
-        public static string ToHex(this Color color)
-            => System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.FromArgb(255, color.R, color.G, color.B));
+        public static async Task<int> HumanMembersAsync(this IGuild guild)
+        {
+            await guild.DownloadUsersAsync().ConfigureAwait(false);
+
+            return (await guild.GetUsersAsync(CacheMode.AllowDownload)).Count(x => !x.IsBot);
+        }
+
+        public static async Task<decimal> GetBotUserRatioAsync(this IGuild guild)
+        {
+            await guild.DownloadUsersAsync().ConfigureAwait(false);
+            var botusers = await guild.RobotMembersAsync().ConfigureAwait(false);
+            var userslist = await guild.GetUsersAsync().ConfigureAwait(false);
+            var users = userslist.Count;
+            return Math.Round((((decimal)botusers / users) * 100m), 2);
+        }
 
         public static async Task<IList<IGuildUser>> GetUsersWithRoleAsync(this IGuild guild, IRole role)
         {
@@ -41,7 +79,7 @@ namespace Skuld.Core.Extensions
 
             foreach (var user in users)
             {
-                if(user.RoleIds.Contains(role.Id))
+                if (user.RoleIds.Contains(role.Id))
                 {
                     usersWithRole.Add(user);
                 }
@@ -158,37 +196,117 @@ namespace Skuld.Core.Extensions
             return (highestRole != null ? highestRole.Color : Color.Default);
         }
 
-        public static string ToEmoji(this ClientType client)
-         => client switch
-         {
-             ClientType.Desktop => "🖥️",
-             ClientType.Mobile => "📱",
-             ClientType.Web => "🔗",
+        #endregion Information
 
-             _ => "🖥️",
-         };
+        #region Formatting
 
-        public static async Task<int> RobotMembersAsync(this IGuild guild)
+        public static string TrimEmbedHiders(this string message)
         {
-            await guild.DownloadUsersAsync().ConfigureAwait(false);
+            if (string.IsNullOrEmpty(message)) return null;
 
-            return (await guild.GetUsersAsync(CacheMode.AllowDownload)).Count(x => x.IsBot);
+            if (message.StartsWith("<"))
+            {
+                message = message.Substring(1);
+            }
+            if (message.EndsWith(">"))
+            {
+                message = message[0..^1];
+            }
+
+            return message;
         }
 
-        public static async Task<int> HumanMembersAsync(this IGuild guild)
+        public static string ReplaceGuildEventMessage(this string message, IUser user, SocketGuild guild)
         {
-            await guild.DownloadUsersAsync().ConfigureAwait(false);
+            if (string.IsNullOrEmpty(message)) return message;
 
-            return (await guild.GetUsersAsync(CacheMode.AllowDownload)).Count(x => !x.IsBot);
+            return message
+                .Replace("-m", "**" + user.Mention + "**")
+                .Replace("-s", "**" + guild.Name + "**")
+                .Replace("-uc", Convert.ToString(guild.MemberCount))
+                .Replace("-u", "**" + user.Username + "**");
         }
 
-        public static async Task<decimal> GetBotUserRatioAsync(this IGuild guild)
+        public static string PruneMention(this string message, ulong id)
         {
-            await guild.DownloadUsersAsync().ConfigureAwait(false);
-            var botusers = await guild.RobotMembersAsync().ConfigureAwait(false);
-            var userslist = await guild.GetUsersAsync().ConfigureAwait(false);
-            var users = userslist.Count;
-            return Math.Round((((decimal)botusers / users) * 100m), 2);
+            if (string.IsNullOrEmpty(message)) return message;
+
+            return message
+                .Replace($"<@{id}> ", "", StringComparison.InvariantCultureIgnoreCase)
+                .Replace($"<@{id}>", "", StringComparison.InvariantCultureIgnoreCase)
+                .Replace($"<@!{id}> ", "", StringComparison.InvariantCultureIgnoreCase)
+                .Replace($"<@!{id}>", "", StringComparison.InvariantCultureIgnoreCase);
         }
+
+        public static string ToMessage(this Embed embed)
+        {
+            if (embed == null) return null;
+
+            string message = "";
+
+            if (embed.Author.HasValue)
+            {
+                message += $"**__{embed.Author.Value.Name}__**\n";
+            }
+            if (!string.IsNullOrEmpty(embed.Title))
+            {
+                message += $"**{embed.Title}**\n";
+            }
+            if (!string.IsNullOrEmpty(embed.Description))
+            {
+                message += embed.Description + "\n";
+            }
+
+            foreach (var field in embed.Fields)
+            {
+                message += $"__{field.Name}__\n{field.Value}\n\n";
+            }
+
+            if (embed.Video.HasValue)
+            {
+                message += embed.Video.Value.Url + "\n";
+            }
+            if (embed.Thumbnail.HasValue)
+            {
+                message += embed.Thumbnail.Value.Url + "\n";
+            }
+            if (embed.Image.HasValue)
+            {
+                message += embed.Image.Value.Url + "\n";
+            }
+            if (embed.Footer.HasValue)
+            {
+                message += $"`{embed.Footer.Value.Text}`";
+            }
+            if (embed.Timestamp.HasValue)
+            {
+                message += " | " + embed.Timestamp.Value.ToString("dd'/'MM'/'yyyy hh:mm:ss tt");
+            }
+
+            return message;
+        }
+
+        #endregion Formatting
+
+        public static async Task DeleteAfterSecondsAsync(this IUserMessage message, int timeout)
+        {
+            await Task.Delay(timeout * 1000).ConfigureAwait(false);
+            await message.DeleteAsync().ConfigureAwait(false);
+        }
+
+        public static async Task<bool> CanEmbedAsync(this IMessageChannel channel, IGuild guild = null)
+        {
+            if (guild == null) return true;
+            else
+            {
+                var curr = await guild.GetCurrentUserAsync();
+                var chan = await guild.GetChannelAsync(channel.Id);
+                var perms = curr.GetPermissions(chan);
+                return perms.EmbedLinks;
+            }
+        }
+
+        public static string JumpLink(this IGuildChannel channel)
+            => $"https://discordapp.com/channels/{channel.GuildId}/{channel.Id}";
     }
 }
