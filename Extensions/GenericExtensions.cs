@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Skuld.Core.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -45,6 +46,86 @@ namespace Skuld.Core.Extensions
                     yield return element;
                 }
             }
+        }
+
+        public static ulong Add(this ulong source, ulong value)
+        {
+            ulong val = source;
+
+            try
+            {
+                checked
+                {
+                    val += value;
+                }
+            }
+            catch (OverflowException  ex)
+            {
+                val = ulong.MaxValue;
+                Log.Error("GenericExtensions", ex.Message, ex);
+            }
+
+            return val;
+        }
+
+        public static ulong Add(this ulong source, uint value)
+        {
+            ulong val = source;
+
+            try
+            {
+                checked
+                {
+                    val += value;
+                }
+            }
+            catch (OverflowException ex)
+            {
+                val = ulong.MaxValue;
+                Log.Error("GenericExtensions", ex.Message, ex);
+            }
+
+            return val;
+        }
+
+        public static ulong Subtract(this ulong source, ulong value)
+        {
+            ulong val = source;
+
+            try
+            {
+                checked
+                {
+                    val -= value;
+                }
+            }
+            catch (OverflowException ex)
+            {
+                val = 0;
+                Log.Error("GenericExtensions", ex.Message, ex);
+            }
+
+            return val;
+        }
+
+        public static ulong Subtract(this ulong source, uint value)
+        {
+            ulong val = source;
+
+            try
+            {
+                checked
+                {
+                    val -= value;
+                }
+            }
+            catch (OverflowException ex)
+            {
+                val = 0;
+                Log.Error("GenericExtensions", ex.Message, ex);
+            }
+
+            return val;
         }
 
         #region DateTime

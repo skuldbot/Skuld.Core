@@ -100,23 +100,22 @@ namespace Skuld.Bot.Extensions
         public static string ReplaceFirst(this string text, string search, string replace)
         {
             int pos = text.IndexOf(search);
+
             if (pos < 0)
-            {
                 return text;
-            }
+
             return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
         }
 
         //https://stackoverflow.com/a/14826068
         public static string ReplaceLast(this string text, string search, string replace)
         {
-            int place = text.LastIndexOf(search);
+            int pos = text.LastIndexOf(search);
 
-            if (place == -1)
+            if (pos < 0)
                 return text;
 
-            string result = text.Remove(place, search.Length).Insert(place, replace);
-            return result;
+            return text.Remove(pos, search.Length).Insert(pos, replace);
         }
 
         public static string ToFormattedString(this ulong Value)
