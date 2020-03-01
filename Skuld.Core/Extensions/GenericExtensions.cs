@@ -50,82 +50,70 @@ namespace Skuld.Core.Extensions
 
         public static ulong Add(this ulong source, ulong value)
         {
-            ulong val = source;
-
             try
             {
                 checked
                 {
-                    val += value;
+                    source += value;
                 }
             }
             catch (OverflowException  ex)
             {
-                val = ulong.MaxValue;
+                source = ulong.MaxValue;
                 Log.Error("GenericExtensions", ex.Message, ex);
             }
-
-            return val;
+            return source;
         }
 
         public static ulong Add(this ulong source, uint value)
         {
-            ulong val = source;
-
             try
             {
                 checked
                 {
-                    val += value;
+                    source += value;
                 }
             }
             catch (OverflowException ex)
             {
-                val = ulong.MaxValue;
+                source = ulong.MaxValue;
                 Log.Error("GenericExtensions", ex.Message, ex);
             }
-
-            return val;
+            return source;
         }
 
         public static ulong Subtract(this ulong source, ulong value)
         {
-            ulong val = source;
-
             try
             {
                 checked
                 {
-                    val -= value;
+                    source -= value;
                 }
             }
             catch (OverflowException ex)
             {
-                val = 0;
+                source = 0;
                 Log.Error("GenericExtensions", ex.Message, ex);
             }
-
-            return val;
+            return source;
         }
 
         public static ulong Subtract(this ulong source, uint value)
         {
-            ulong val = source;
-
             try
             {
                 checked
                 {
-                    val -= value;
+                    source -= value;
                 }
             }
             catch (OverflowException ex)
             {
-                val = 0;
+                source = 0;
                 Log.Error("GenericExtensions", ex.Message, ex);
             }
-
-            return val;
+            return source;
         }
 
         #region DateTime

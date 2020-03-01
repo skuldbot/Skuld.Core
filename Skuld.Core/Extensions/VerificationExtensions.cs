@@ -69,10 +69,16 @@ namespace Skuld.Core.Extensions.Verification
 
             var same = iarr.All(x => x == iarr[0]);
 
-            return (same && iarr.Count() > startLimit);
+            return (same && iarr.Count() >= startLimit);
         }
 
         public static bool IsBitSet(this ulong i, ulong shifted)
             => (i & shifted) != 0;
+
+        public static bool IsSameUpperedInvariant(this string original, string comparison)
+            => original.ToUpperInvariant() == comparison.ToUpperInvariant();
+
+        public static bool ContainsUpperedInvariant(this string original, string comparison)
+            => original.ToUpperInvariant().Contains(comparison.ToUpperInvariant());
     }
 }

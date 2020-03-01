@@ -1,24 +1,22 @@
-﻿using Discord.WebSocket;
-using System;
+﻿using Discord;
+using Discord.WebSocket;
 using System.Threading.Tasks;
-using DiscordNet = Discord;
 
 namespace Skuld.Core.Utilities
 {
     public static class MessageTools
     {
-        private static readonly string Key = "MsgTools";
         public static string ModAdminBypass = "-!{MA_commands}";
         public static string NoOneCommands = "-!commands";
 
-        public static async Task<bool> CheckEmbedPermission(DiscordShardedClient client, DiscordNet.IChannel channel)
+        public static async Task<bool> CheckEmbedPermission(DiscordShardedClient client, IChannel channel)
         {
-            if (channel is DiscordNet.IDMChannel)
+            if (channel is IDMChannel)
             {
                 return true;
             }
 
-            var gchan = channel as DiscordNet.ITextChannel;
+            var gchan = channel as ITextChannel;
             var gusr = await gchan.GetUserAsync(client.CurrentUser.Id).ConfigureAwait(false);
             return gusr.GetPermissions(gchan).EmbedLinks;
         }
@@ -53,7 +51,7 @@ namespace Skuld.Core.Utilities
             return content[0];
         }
 
-        public static bool IsEnabledChannel(DiscordNet.IGuildUser user, DiscordNet.ITextChannel channel)
+        public static bool IsEnabledChannel(IGuildUser user, ITextChannel channel)
         {
             if (channel == null) return true;
             if (channel.Topic == null) return true;
@@ -67,25 +65,7 @@ namespace Skuld.Core.Utilities
             return true;
         }
 
-        public static bool HasPrefix(DiscordNet.IUserMessage message, params string[] prefixes)
+        public static bool HasPrefix(IUserMessage message, params string[] prefixes)
             => !string.IsNullOrEmpty(GetPrefixFromCommand(message.Content, prefixes));
-
-        public static async Task<DiscordNet.IUserMessage> SendChannelAsync(this DiscordShardedClient client, DiscordNet.IChannel channel, string message)
-        {
-            try
-            {
-                var textChan = (DiscordNet.ITextChannel)channel;
-                var mesgChan = (DiscordNet.IMessageChannel)channel;
-                if (channel == null || textChan == null || mesgChan == null) { return null; }
-                await mesgChan.TriggerTypingAsync();
-                Log.Info(Key, $"Dispatched message to {(channel as DiscordNet.IGuildChannel).Guild} in {(channel as DiscordNet.IGuildChannel).Name}");
-                return await mesgChan.SendMessageAsync(message);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(Key, $"Error dispatching Message - {ex.Message}", ex);
-                return null;
-            }
-        }
     }
 }

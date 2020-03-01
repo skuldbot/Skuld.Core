@@ -12,20 +12,30 @@ namespace Skuld.Core.Utilities
     {
         public readonly static string CurrentLogFileName = DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + ".log";
 
-        private readonly static StreamWriter LogFile = new StreamWriter(
-            File.Open(
-                Path.Combine(SkuldAppContext.LogDirectory, CurrentLogFileName),
-                FileMode.Append,
-                FileAccess.Write,
-                FileShare.Read)
-            )
+        private static StreamWriter LogFile;
+
+        public static void Configure()
         {
-            AutoFlush = true,
-            NewLine = "\n"
-        };
+            if(LogFile == null && Directory.Exists(SkuldAppContext.LogDirectory))
+            {
+                LogFile = new StreamWriter(
+                    File.Open(
+                        Path.Combine(SkuldAppContext.LogDirectory, CurrentLogFileName),
+                        FileMode.Append,
+                        FileAccess.Write,
+                        FileShare.Read)
+                    )
+                {
+                    AutoFlush = true,
+                    NewLine = "\n"
+                };
+            }
+        }
 
         private static string Message(string source, string message, LogSeverity severity)
         {
+            Configure();
+
             var lines = new List<string[]>
             {
                 new[]
@@ -52,14 +62,20 @@ namespace Skuld.Core.Utilities
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-                LogFile.WriteLine(m);
+                if (LogFile != null)
+                {
+                    LogFile.WriteLine(m);
+                }
 
                 if (SkuldAppContext.GetLogLevel() >= LogSeverity.Critical)
                     Console.Out.WriteLine(m);
             }
             else
             {
-                LogFile.WriteLine(msg);
+                if(LogFile != null)
+                {
+                    LogFile.WriteLine(msg);
+                }
 
                 if (SkuldAppContext.GetLogLevel() >= LogSeverity.Critical)
                     Console.Out.WriteLine(msg);
@@ -67,7 +83,10 @@ namespace Skuld.Core.Utilities
 
             Console.ForegroundColor = ConsoleColor.White;
 
-            LogFile.Flush();
+            if (LogFile != null)
+            {
+                LogFile.Flush();
+            }
         }
 
         public static void Debug(string source, string message, Exception exception = null)
@@ -81,7 +100,11 @@ namespace Skuld.Core.Utilities
                 if (SkuldAppContext.GetLogLevel() >= LogSeverity.Debug)
                 {
                     Console.Out.WriteLine(m);
-                    LogFile.WriteLine(m);
+
+                    if (LogFile != null)
+                    {
+                        LogFile.WriteLine(m);
+                    }
                 }
             }
             else
@@ -89,13 +112,20 @@ namespace Skuld.Core.Utilities
                 if (SkuldAppContext.GetLogLevel() >= LogSeverity.Debug)
                 {
                     Console.Out.WriteLine(msg);
-                    LogFile.WriteLine(msg);
+                    
+                    if (LogFile != null)
+                    {
+                        LogFile.WriteLine(msg);
+                    }
                 }
             }
 
             Console.ForegroundColor = ConsoleColor.White;
 
-            LogFile.Flush();
+            if (LogFile != null)
+            {
+                LogFile.Flush();
+            }
         }
 
         public static void Error(string source, string message, Exception exception = null)
@@ -106,11 +136,17 @@ namespace Skuld.Core.Utilities
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-                LogFile.WriteLine(m);
+                if (LogFile != null)
+                {
+                    LogFile.WriteLine(m);
+                }
             }
             else
             {
-                LogFile.WriteLine(msg);
+                if (LogFile != null)
+                {
+                    LogFile.WriteLine(msg);
+                }
             }
 
             if (SkuldAppContext.GetLogLevel() >= LogSeverity.Error)
@@ -118,7 +154,10 @@ namespace Skuld.Core.Utilities
 
             Console.ForegroundColor = ConsoleColor.White;
 
-            LogFile.Flush();
+            if (LogFile != null)
+            {
+                LogFile.Flush();
+            }
         }
 
         public static void Verbose(string source, string message, Exception exception = null)
@@ -133,17 +172,26 @@ namespace Skuld.Core.Utilities
                 {
                     var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-                    LogFile.WriteLine(m);
+                    if (LogFile != null)
+                    {
+                        LogFile.WriteLine(m);
+                    }
                 }
                 else
                 {
-                    LogFile.WriteLine(msg);
+                    if (LogFile != null)
+                    {
+                        LogFile.WriteLine(msg);
+                    }
                 }
             }
 
             Console.ForegroundColor = ConsoleColor.White;
 
-            LogFile.Flush();
+            if (LogFile != null)
+            {
+                LogFile.Flush();
+            }
         }
 
         public static void Warning(string source, string message, Exception exception = null)
@@ -154,11 +202,17 @@ namespace Skuld.Core.Utilities
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-                LogFile.WriteLine(m);
+                if (LogFile != null)
+                {
+                    LogFile.WriteLine(m);
+                }
             }
             else
             {
-                LogFile.WriteLine(msg);
+                if (LogFile != null)
+                {
+                    LogFile.WriteLine(msg);
+                }
             }
 
             if (SkuldAppContext.GetLogLevel() >= LogSeverity.Warning)
@@ -166,21 +220,30 @@ namespace Skuld.Core.Utilities
 
             Console.ForegroundColor = ConsoleColor.White;
 
-            LogFile.Flush();
+            if (LogFile != null)
+            {
+                LogFile.Flush();
+            }
         }
 
         public static void Info(string source, string message)
         {
             var msg = Message(source, message, LogSeverity.Info);
 
-            LogFile.WriteLine(msg);
+            if (LogFile != null)
+            {
+                LogFile.WriteLine(msg);
+            }
 
             if (SkuldAppContext.GetLogLevel() >= LogSeverity.Info)
                 Console.Out.WriteLine(msg);
 
             Console.ForegroundColor = ConsoleColor.White;
 
-            LogFile.Flush();
+            if (LogFile != null)
+            {
+                LogFile.Flush();
+            }
         }
 
         public static void FlushNewLine()

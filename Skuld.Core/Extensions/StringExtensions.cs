@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Skuld.Bot.Extensions
+namespace Skuld.Core.Extensions
 {
     public static class StringExtensions
     {

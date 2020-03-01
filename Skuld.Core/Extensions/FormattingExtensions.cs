@@ -30,8 +30,25 @@ namespace Skuld.Core.Extensions.Formatting
 
             var builder = new StringBuilder();
 
-            builder.Append((int)Math.Floor(offset.TotalDays));
-            builder.Append(" days ago");
+            var days = (int)Math.Floor(offset.TotalDays);
+
+            if(days > 0)
+            {
+                builder.Append(days);
+            }
+
+            if (days > 1)
+            {
+                builder.Append(" days ago");
+            }
+            else if (days == 1)
+            {
+                builder.Append(" day ago");
+            }
+            else
+            {
+                builder.Append("today");
+            }
 
             return builder.ToString();
         }
