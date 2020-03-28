@@ -28,13 +28,32 @@ namespace Skuld.Core.Extensions.Formatting
         {
             var offset = dateTime - dateTimeOffset;
 
-            var builder = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
 
-            var days = (int)Math.Floor(offset.TotalDays);
+            int days = (int)Math.Floor(offset.TotalDays);
+
+            int years = days / 365;
+
+            if(years > 0)
+            {
+                builder.Append(years.ToFormattedString());
+                if (years > 2)
+                {
+                    builder.Append(" years");
+                }
+                if (years < 2)
+                {
+                    builder.Append(" year");
+                }
+
+                builder.Append(" and ");
+
+                days = days - (years * 365);
+            }
 
             if(days > 0)
             {
-                builder.Append(days);
+                builder.Append(days.ToFormattedString());
             }
 
             if (days > 1)
@@ -58,6 +77,25 @@ namespace Skuld.Core.Extensions.Formatting
 
         public static string ToDMYString(this DateTimeOffset dateTime)
             => dateTime.ToString("dd'/'MM'/'yyyy HH:mm:ss");
+
+        public static string ToDifferenceString(this TimeSpan difference)
+        {
+            StringBuilder message = new StringBuilder();
+
+            if (difference.Days > 0)
+                message.Append($"{difference.Days} day{(difference.Days > 1 ? "s" : "")} ");
+
+            if (difference.Hours > 0)
+                message.Append($"{difference.Hours} hours{(difference.Hours > 1 ? "s" : "")} ");
+
+            if (difference.Minutes > 0)
+                message.Append($"{difference.Minutes} minute{(difference.Minutes > 1 ? "s" : "")} ");
+
+            if (difference.Seconds > 0)
+                message.Append($"{difference.Seconds} second{(difference.Seconds > 1 ? "s" : "")} ");
+
+            return message.ToString()[0..^1];
+        }
 
         //https://gist.github.com/starquake/8d72f1e55c0176d8240ed336f92116e3
         public static string StripHtml(this string value)

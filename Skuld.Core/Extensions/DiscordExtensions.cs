@@ -36,15 +36,15 @@ namespace Skuld.Core.Extensions
 
         #region Information
 
-        public static string FullName(this IUser usr)
-            => $"{usr.Username}#{usr.Discriminator}";
+        public static string FullName(this IUser user)
+            => $"{user.Username}#{user.Discriminator}";
 
-        public static string FullNameWithNickname(this IGuildUser usr)
+        public static string FullNameWithNickname(this IGuildUser user)
         {
-            if (usr.Nickname == null)
-                return usr.FullName();
+            if (string.IsNullOrEmpty(user.Nickname))
+                return user.FullName();
             else
-                return $"{usr.Username} ({usr.Nickname})#{usr.Discriminator}";
+                return $"{user.FullName()} ({user.Nickname})";
         }
 
         public static async Task<int> RobotMembersAsync(this IGuild guild)

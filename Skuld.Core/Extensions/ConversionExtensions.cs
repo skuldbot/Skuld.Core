@@ -9,16 +9,21 @@ namespace Skuld.Core.Extensions.Conversion
     {
         public static bool ToBool(this string data)
         {
-            if (data.ToLowerInvariant() == "true")
-                return true;
-            if (data.ToLowerInvariant() == "false")
-                return false;
-            if (data == "1")
-                return true;
-            if (data == "0")
-                return false;
+            switch (data.ToLowerInvariant())
+            {
+                case "true":
+                case "1":
+                case "y":
+                    return true;
 
-            throw new Exception("Cannot Convert from \"" + data + "\" to Boolean");
+                case "false":
+                case "0":
+                case "n":
+                    return false;
+
+                default:
+                    throw new Exception("Cannot Convert from \"" + data + "\" to Boolean");
+            }
         }
 
         public static MemoryStream ToMemoryStream(this string value)
@@ -29,17 +34,22 @@ namespace Skuld.Core.Extensions.Conversion
 
         public static ConsoleColor SeverityToColor(this LogSeverity sev)
         {
-            if (sev == LogSeverity.Critical)
-                return ConsoleColor.Red;
-            if (sev == LogSeverity.Error)
-                return ConsoleColor.Red;
-            if (sev == LogSeverity.Info)
-                return ConsoleColor.Green;
-            if (sev == LogSeverity.Warning)
-                return ConsoleColor.Yellow;
-            if (sev == LogSeverity.Verbose)
-                return ConsoleColor.Cyan;
-            return ConsoleColor.White;
+            switch (sev)
+            {
+                case LogSeverity.Critical:
+                    return ConsoleColor.Red;
+                case LogSeverity.Error:
+                    return ConsoleColor.Red;
+                case LogSeverity.Info:
+                    return ConsoleColor.Green;
+                case LogSeverity.Warning:
+                    return ConsoleColor.Yellow;
+                case LogSeverity.Verbose:
+                    return ConsoleColor.Cyan;
+
+                default:
+                    return ConsoleColor.White;
+            }
         }
 
         public static double Remap(this double value, double min1, double max1, double min2, double max2)

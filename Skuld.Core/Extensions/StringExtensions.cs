@@ -130,6 +130,12 @@ namespace Skuld.Core.Extensions
         public static string ToFormattedString(this uint Value)
             => Value.ToString("N0");
 
+        public static string ToFormattedString(this short Value)
+            => Value.ToString("N0");
+
+        public static string ToFormattedString(this ushort Value)
+            => Value.ToString("N0");
+
         public static string ToRegionalIndicator(this string value)
         {
             StringBuilder ret = new StringBuilder();
