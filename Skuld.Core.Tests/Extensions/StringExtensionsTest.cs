@@ -47,7 +47,7 @@ namespace Skuld.Core.Tests
                 .Returns(0001);
 
             Assert.Equal("Clyde#0001", guildmock.Object.FullName());
-            Assert.Equal("Clyde (Wumpus)#0001", guildmock.Object.FullNameWithNickname());
+            Assert.Equal("Clyde#0001 (Wumpus)", guildmock.Object.FullNameWithNickname());
         }
     }
 }

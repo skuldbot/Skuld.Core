@@ -7,7 +7,8 @@ namespace Skuld.Core.Utilities
     public static class DiscordUtilities
     {
         public const double PHI = 1.618;
-        public static GuildPermissions ModeratorPermissions = new GuildPermissions(268443650);
+        public static GuildPermissions ModeratorPermissions = new GuildPermissions(268443648);
+        public static ChannelPermissions RequiredForStarboard = new ChannelPermissions(19520);
 
         #region Response Emojis
 

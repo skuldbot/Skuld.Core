@@ -18,6 +18,15 @@ namespace Skuld.Core.Tests
             Assert.Equal(expected.Hours, result.Hours);
             Assert.Equal(expected.Minutes, result.Minutes);
             Assert.Equal(expected.Seconds, result.Seconds);
+
+            res = StringTimeHelper.TryParse("1D 1H 1M 1S", out r);
+            result = r.Value;
+
+            Assert.True(res);
+            Assert.Equal(expected.Days, result.Days);
+            Assert.Equal(expected.Hours, result.Hours);
+            Assert.Equal(expected.Minutes, result.Minutes);
+            Assert.Equal(expected.Seconds, result.Seconds);
         }
         [Fact]
         public void TestDay()
