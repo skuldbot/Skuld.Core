@@ -116,6 +116,40 @@ namespace Skuld.Core.Extensions
             return source;
         }
 
+        public static uint Add(this uint source, uint value)
+        {
+            try
+            {
+                checked
+                {
+                    source += value;
+                }
+            }
+            catch (OverflowException ex)
+            {
+                source = uint.MaxValue;
+                Log.Error("GenericExtensions", ex.Message, ex);
+            }
+            return source;
+        }
+
+        public static uint Subtract(this uint source, uint value)
+        {
+            try
+            {
+                checked
+                {
+                    source -= value;
+                }
+            }
+            catch (OverflowException ex)
+            {
+                source = 0;
+                Log.Error("GenericExtensions", ex.Message, ex);
+            }
+            return source;
+        }
+
         #region DateTime
 
         public static int MonthsBetween(this DateTime date1, DateTime date2)
