@@ -13,22 +13,27 @@ namespace Skuld.Core.Utilities
         public readonly static string CurrentLogFileName = DateTime.UtcNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + ".log";
 
         private static StreamWriter LogFile;
+        private static bool hasBeenConfigured = false;
 
         public static void Configure()
         {
-            if(LogFile == null && Directory.Exists(SkuldAppContext.LogDirectory))
+            if (Directory.Exists(SkuldAppContext.LogDirectory))
             {
-                LogFile = new StreamWriter(
-                    File.Open(
-                        Path.Combine(SkuldAppContext.LogDirectory, CurrentLogFileName),
-                        FileMode.Append,
-                        FileAccess.Write,
-                        FileShare.Read)
-                    )
+                if (!hasBeenConfigured)
                 {
-                    AutoFlush = true,
-                    NewLine = "\n"
-                };
+                    LogFile = new StreamWriter(
+                        File.Open(
+                            Path.Combine(SkuldAppContext.LogDirectory, CurrentLogFileName),
+                            FileMode.Append,
+                            FileAccess.Write,
+                            FileShare.Read)
+                        )
+                    {
+                        AutoFlush = true,
+                        NewLine = "\n"
+                    };
+                    hasBeenConfigured = true;
+                }
             }
         }
 

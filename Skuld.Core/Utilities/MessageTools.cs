@@ -33,6 +33,8 @@ namespace Skuld.Core.Utilities
 
             foreach (var prefix in prefixes)
             {
+                if (prefix == null) continue;
+
                 if (command.StartsWith(prefix))
                 {
                     result = prefix;
