@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using System;
 using System.Threading.Tasks;
 
 namespace Skuld.Core.Utilities
@@ -16,9 +17,14 @@ namespace Skuld.Core.Utilities
                 return true;
             }
 
-            var gchan = channel as ITextChannel;
-            var gusr = await gchan.GetUserAsync(client.CurrentUser.Id).ConfigureAwait(false);
-            return gusr.GetPermissions(gchan).EmbedLinks;
+            if(channel is ITextChannel chan)
+            {
+                var gusr = await chan.GetUserAsync(client.CurrentUser.Id).ConfigureAwait(false);
+                
+                return gusr.GetPermissions(chan).EmbedLinks;
+            }
+
+            return true;
         }
 
         public static string GetPrefixFromCommand(string command, params string[] prefixes)
@@ -55,13 +61,13 @@ namespace Skuld.Core.Utilities
         {
             if (channel == null) return true;
             if (channel.Topic == null) return true;
-            if (channel.Topic.Contains(ModAdminBypass))
+            if (channel.Topic.ToUpperInvariant().Contains(ModAdminBypass.ToUpperInvariant(), StringComparison.InvariantCulture))
             {
                 if (user.GuildPermissions.Administrator) return true;
                 else if (user.GuildPermissions.RawValue == DiscordUtilities.ModeratorPermissions.RawValue) return true;
                 else return false;
             }
-            if (channel.Topic.Contains(NoOneCommands)) return false;
+            if (channel.Topic.ToUpperInvariant().Contains(NoOneCommands.ToUpperInvariant(), StringComparison.InvariantCulture)) return false;
             return true;
         }
 
