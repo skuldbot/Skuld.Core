@@ -30,7 +30,7 @@ namespace Skuld.Core.Utilities
                         File.Open(
                             Path.Combine(SkuldAppContext.LogDirectory, CurrentLogFileName), 
                             FileMode.Append, 
-                            FileAccess.ReadWrite, 
+                            FileAccess.Write, 
                             FileShare.Read
                         )
                     )
