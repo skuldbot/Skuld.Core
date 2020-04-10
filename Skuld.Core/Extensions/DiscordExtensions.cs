@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using Skuld.Core.Utilities;
 using System;
@@ -308,5 +309,19 @@ namespace Skuld.Core.Extensions
 
         public static string JumpLink(this IGuildChannel channel)
             => $"https://discordapp.com/channels/{channel.GuildId}/{channel.Id}";
+
+        public static ModuleInfo GetTopLevelParent(this ModuleInfo childModule)
+        {
+            if (!childModule.IsSubmodule) return childModule;
+
+            ModuleInfo previousModule = childModule.Parent;
+
+            while(previousModule.Parent != null)
+            {
+                previousModule = previousModule.Parent;
+            }
+
+            return previousModule;
+        }
     }
 }

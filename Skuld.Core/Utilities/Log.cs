@@ -17,22 +17,32 @@ namespace Skuld.Core.Utilities
 
         public static void Configure()
         {
-            if (Directory.Exists(SkuldAppContext.LogDirectory))
+            if (!Directory.Exists(SkuldAppContext.LogDirectory))
             {
-                if (!hasBeenConfigured)
+                Directory.CreateDirectory(SkuldAppContext.LogDirectory);
+            }
+
+            if (!hasBeenConfigured)
+            {
+                try
                 {
                     LogFile = new StreamWriter(
                         File.Open(
-                            Path.Combine(SkuldAppContext.LogDirectory, CurrentLogFileName),
-                            FileMode.Append,
-                            FileAccess.Write,
-                            FileShare.Read)
+                            Path.Combine(SkuldAppContext.LogDirectory, CurrentLogFileName), 
+                            FileMode.Append, 
+                            FileAccess.ReadWrite, 
+                            FileShare.Read
                         )
+                    )
                     {
                         AutoFlush = true,
                         NewLine = "\n"
                     };
                     hasBeenConfigured = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(Message("Log", ex.Message, LogSeverity.Critical));
                 }
             }
         }
