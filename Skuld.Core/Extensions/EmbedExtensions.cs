@@ -12,16 +12,19 @@ namespace Skuld.Core.Extensions
         public static EmbedBuilder FromMessage(ICommandContext context)
             => FromMessage("", "", context);
 
+        public static EmbedBuilder FromMessage(string message, ICommandContext context)
+            => FromMessage("", message, context);
+
         public static EmbedBuilder FromMessage(string title, string message, ICommandContext context)
             => FromMessage(title, message, Color.Teal, context);
 
         public static EmbedBuilder FromMessage(string title, string message, Color color, ICommandContext context)
             => new EmbedBuilder()
-                .WithDescription(message)
-                .WithCurrentTimestamp()
-                .AddFooter(context)
                 .WithTitle(title)
                 .WithColor(color)
+                .AddFooter(context)
+                .WithCurrentTimestamp()
+                .WithDescription(message)
                 .AddAuthor(context.Client);
 
         public static EmbedBuilder FromError(string title, string message, ICommandContext context)
@@ -47,11 +50,28 @@ namespace Skuld.Core.Extensions
 
         public static EmbedBuilder FromImage(string imageUrl, Color color, ICommandContext context)
             => new EmbedBuilder()
+                .WithColor(color)
+                .AddFooter(context)
                 .WithImageUrl(imageUrl)
                 .WithCurrentTimestamp()
-                .AddFooter(context)
-                .WithColor(color)
                 .AddAuthor(context.Client);
+        
+        public static EmbedBuilder FromImage(string imageUrl, ICommandContext context)
+            => new EmbedBuilder()
+                .WithRandomColor()
+                .AddFooter(context)
+                .WithCurrentTimestamp()
+                .WithImageUrl(imageUrl)
+                .AddAuthor(context.Client);
+
+        public static EmbedBuilder FromImage(string imageUrl, string description, ICommandContext context)
+            => new EmbedBuilder()
+                .WithRandomColor()
+                .AddFooter(context)
+                .WithCurrentTimestamp()
+                .WithImageUrl(imageUrl)
+                .AddAuthor(context.Client)
+                .WithDescription(description);
 
         public static EmbedBuilder AddAuthor(this EmbedBuilder builder, IDiscordClient client)
             => builder.WithAuthor(client.CurrentUser.Username,

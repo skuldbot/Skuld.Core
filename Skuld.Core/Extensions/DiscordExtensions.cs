@@ -310,9 +310,33 @@ namespace Skuld.Core.Extensions
         public static string JumpLink(this IGuildChannel channel)
             => $"https://discordapp.com/channels/{channel.GuildId}/{channel.Id}";
 
+        public static string GetModulePath(this ModuleInfo module)
+        {
+            if (!module.IsSubmodule)
+            {
+                return module.Name;
+            }
+
+            ModuleInfo previousModule = module.Parent;
+
+            StringBuilder path = new StringBuilder();
+
+            while (previousModule.Parent != null)
+            {
+                path.Append(previousModule.Name);
+                path.Append("/");
+                previousModule = previousModule.Parent;
+            }
+
+            return path.ToString();
+        }
+
         public static ModuleInfo GetTopLevelParent(this ModuleInfo childModule)
         {
-            if (!childModule.IsSubmodule) return childModule;
+            if (!childModule.IsSubmodule)
+            {
+                return childModule;
+            }
 
             ModuleInfo previousModule = childModule.Parent;
 
