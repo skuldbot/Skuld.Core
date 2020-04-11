@@ -27,7 +27,17 @@ namespace Skuld.Core
 
         public static void SetConfigurationId(string inId) => ConfigurationId = inId;
 
-        public static LogSeverity GetLogLevel() => (LogSeverity)Enum.Parse(typeof(LogSeverity), GetEnvVar(LogLvlEnvVar));
+        public static LogSeverity GetLogLevel()
+        {
+            var logLevel = GetEnvVar(LogLvlEnvVar);
+
+            if (logLevel != null)
+            {
+                return (LogSeverity)Enum.Parse(typeof(LogSeverity), logLevel);
+            }
+
+            return LogSeverity.Debug;
+        }
 
         public static object GetData(string name) => AppContext.GetData(name);
 
