@@ -222,11 +222,11 @@ namespace Skuld.Core.Extensions
             if (string.IsNullOrEmpty(message)) return message;
 
             return message
-                .Replace("-m", "**" + user.Mention + "**")
-                .Replace("-s", "**" + guild.Name + "**")
-                .Replace("-uc", Convert.ToString(guild.MemberCount))
-                .Replace("-u", "**" + user.Username + "**")
-                .Replace("-ud", "**" + user.FullName() + "**");
+                .ReplaceFirst("-m", "**" + user.Mention + "**")
+                .ReplaceFirst("-s", "**" + guild.Name + "**")
+                .ReplaceFirst("-uc", Convert.ToString(guild.MemberCount))
+                .ReplaceFirst("-ud", "**" + user.FullName() + "**")
+                .ReplaceFirst("-u", "**" + user.Username + "**");
         }
 
         public static string PruneMention(this string message, ulong id)
