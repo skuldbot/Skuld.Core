@@ -225,7 +225,8 @@ namespace Skuld.Core.Extensions
                 .Replace("-m", "**" + user.Mention + "**")
                 .Replace("-s", "**" + guild.Name + "**")
                 .Replace("-uc", Convert.ToString(guild.MemberCount))
-                .Replace("-u", "**" + user.Username + "**");
+                .Replace("-u", "**" + user.Username + "**")
+                .Replace("-ud", "**" + user.FullName() + "**");
         }
 
         public static string PruneMention(this string message, ulong id)
