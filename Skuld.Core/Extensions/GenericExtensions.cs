@@ -26,6 +26,9 @@ namespace Skuld.Core.Extensions
             }
         }
 
+        public static double NthRoot(this double value, int nth)
+            => Math.Pow(value, 1.0 / nth);
+
         public static T RandomValue<T>(this IEnumerable<T> entries) where T : class
         {
             var list = entries.ToList();
