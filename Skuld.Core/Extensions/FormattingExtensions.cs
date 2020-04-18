@@ -83,16 +83,24 @@ namespace Skuld.Core.Extensions.Formatting
             StringBuilder message = new StringBuilder();
 
             if (difference.Days > 0)
+            {
                 message.Append($"{difference.Days} day{(difference.Days > 1 ? "s" : "")} ");
+            }
 
             if (difference.Hours > 0)
-                message.Append($"{difference.Hours} hours{(difference.Hours > 1 ? "s" : "")} ");
+            {
+                message.Append($"{difference.Hours} hour{(difference.Hours > 1 ? "s" : "")} ");
+            }
 
             if (difference.Minutes > 0)
+            {
                 message.Append($"{difference.Minutes} minute{(difference.Minutes > 1 ? "s" : "")} ");
+            }
 
             if (difference.Seconds > 0)
+            {
                 message.Append($"{difference.Seconds} second{(difference.Seconds > 1 ? "s" : "")} ");
+            }
 
             return message.ToString()[0..^1];
         }
