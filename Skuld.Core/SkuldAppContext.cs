@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace Skuld.Core
 {
@@ -21,6 +22,7 @@ namespace Skuld.Core
         public const string ConfigEnvVar = "SKULD_CONFIGID";
         public const string ConStrEnvVar = "SKULD_CONNSTR";
         public const string LogLvlEnvVar = "SKULD_LOGLEVEL";
+        public static Regex LinkRegex = new Regex(@"((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)", RegexOptions.IgnoreCase);
 
         public static string GetCaller([CallerMemberName] string caller = null)
             => caller;
