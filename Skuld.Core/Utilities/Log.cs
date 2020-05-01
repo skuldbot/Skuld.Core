@@ -112,20 +112,33 @@ namespace Skuld.Core.Utilities
                     {
                         scope.Level = SentryLevel.Fatal;
 
-                        scope.User = new User
-                        {
-                            Id = $"{context.User.Id}",
-                            Username = context.User.Username,
-                        };
-
                         if (context != null)
                         {
+                            scope.User = new User
+                            {
+                                Id = $"{context.User.Id}",
+                                Username = context.User.Username,
+                            };
                             scope.SetTag("user_id", $"{context.User.Id}");
                             if (context.Guild != null)
                             {
                                 scope.SetTag("guild_id", $"{context.Guild.Id}");
                             }
                             scope.SetTag("channel_id", $"{context.Channel.Id}");
+                        }
+                        else
+                        {
+                            scope.User = new User
+                            {
+                                Id = "0",
+                                Username = "",
+                            };
+                            scope.SetTag("user_id", "");
+                            if (context.Guild != null)
+                            {
+                                scope.SetTag("guild_id", "");
+                            }
+                            scope.SetTag("channel_id", "");
                         }
                     });
                     SentrySdk.CaptureException(exception);
@@ -179,20 +192,33 @@ namespace Skuld.Core.Utilities
                     {
                         scope.Level = SentryLevel.Debug;
 
-                        scope.User = new User
-                        {
-                            Id = $"{context.User.Id}",
-                            Username = context.User.Username,
-                        };
-
                         if (context != null)
                         {
+                            scope.User = new User
+                            {
+                                Id = $"{context.User.Id}",
+                                Username = context.User.Username,
+                            };
                             scope.SetTag("user_id", $"{context.User.Id}");
                             if (context.Guild != null)
                             {
                                 scope.SetTag("guild_id", $"{context.Guild.Id}");
                             }
                             scope.SetTag("channel_id", $"{context.Channel.Id}");
+                        }
+                        else
+                        {
+                            scope.User = new User
+                            {
+                                Id = "0",
+                                Username = "",
+                            };
+                            scope.SetTag("user_id", "");
+                            if (context.Guild != null)
+                            {
+                                scope.SetTag("guild_id", "");
+                            }
+                            scope.SetTag("channel_id", "");
                         }
                     });
                     SentrySdk.CaptureException(exception);
@@ -251,20 +277,33 @@ namespace Skuld.Core.Utilities
                     {
                         scope.Level = SentryLevel.Error;
 
-                        scope.User = new User
-                        {
-                            Id = $"{context.User.Id}",
-                            Username = context.User.Username,
-                        };
-
                         if (context != null)
                         {
+                            scope.User = new User
+                            {
+                                Id = $"{context.User.Id}",
+                                Username = context.User.Username,
+                            };
                             scope.SetTag("user_id", $"{context.User.Id}");
                             if (context.Guild != null)
                             {
                                 scope.SetTag("guild_id", $"{context.Guild.Id}");
                             }
                             scope.SetTag("channel_id", $"{context.Channel.Id}");
+                        }
+                        else
+                        {
+                            scope.User = new User
+                            {
+                                Id = "0",
+                                Username = "",
+                            };
+                            scope.SetTag("user_id", "");
+                            if (context.Guild != null)
+                            {
+                                scope.SetTag("guild_id", "");
+                            }
+                            scope.SetTag("channel_id", "");
                         }
                     });
                     SentrySdk.CaptureException(exception);
@@ -313,20 +352,33 @@ namespace Skuld.Core.Utilities
                     {
                         scope.Level = SentryLevel.Debug;
 
-                        scope.User = new User
-                        {
-                            Id = $"{context.User.Id}",
-                            Username = context.User.Username,
-                        };
-
                         if (context != null)
                         {
+                            scope.User = new User
+                            {
+                                Id = $"{context.User.Id}",
+                                Username = context.User.Username,
+                            };
                             scope.SetTag("user_id", $"{context.User.Id}");
-                            if(context.Guild != null)
+                            if (context.Guild != null)
                             {
                                 scope.SetTag("guild_id", $"{context.Guild.Id}");
                             }
                             scope.SetTag("channel_id", $"{context.Channel.Id}");
+                        }
+                        else
+                        {
+                            scope.User = new User
+                            {
+                                Id = "0",
+                                Username = "",
+                            };
+                            scope.SetTag("user_id", "");
+                            if (context.Guild != null)
+                            {
+                                scope.SetTag("guild_id", "");
+                            }
+                            scope.SetTag("channel_id", "");
                         }
                     });
                     SentrySdk.CaptureException(exception);
@@ -375,20 +427,33 @@ namespace Skuld.Core.Utilities
                     {
                         scope.Level = SentryLevel.Warning;
 
-                        scope.User = new User
-                        {
-                            Id = $"{context.User.Id}",
-                            Username = context.User.Username,
-                        };
-
                         if (context != null)
                         {
+                            scope.User = new User
+                            {
+                                Id = $"{context.User.Id}",
+                                Username = context.User.Username,
+                            };
                             scope.SetTag("user_id", $"{context.User.Id}");
                             if (context.Guild != null)
                             {
                                 scope.SetTag("guild_id", $"{context.Guild.Id}");
                             }
                             scope.SetTag("channel_id", $"{context.Channel.Id}");
+                        }
+                        else
+                        {
+                            scope.User = new User
+                            {
+                                Id = "0",
+                                Username = "",
+                            };
+                            scope.SetTag("user_id", "");
+                            if (context.Guild != null)
+                            {
+                                scope.SetTag("guild_id", "");
+                            }
+                            scope.SetTag("channel_id", "");
                         }
                     });
                     SentrySdk.CaptureException(exception);
