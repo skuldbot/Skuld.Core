@@ -63,7 +63,7 @@ namespace Skuld.Core.Extensions
             catch (OverflowException  ex)
             {
                 source = ulong.MaxValue;
-                Log.Error("GenericExtensions", ex.Message, ex);
+                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }
@@ -80,7 +80,7 @@ namespace Skuld.Core.Extensions
             catch (OverflowException ex)
             {
                 source = ulong.MaxValue;
-                Log.Error("GenericExtensions", ex.Message, ex);
+                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }
@@ -97,7 +97,7 @@ namespace Skuld.Core.Extensions
             catch (OverflowException ex)
             {
                 source = 0;
-                Log.Error("GenericExtensions", ex.Message, ex);
+                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }
@@ -114,7 +114,7 @@ namespace Skuld.Core.Extensions
             catch (OverflowException ex)
             {
                 source = 0;
-                Log.Error("GenericExtensions", ex.Message, ex);
+                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }
@@ -131,7 +131,7 @@ namespace Skuld.Core.Extensions
             catch (OverflowException ex)
             {
                 source = uint.MaxValue;
-                Log.Error("GenericExtensions", ex.Message, ex);
+                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }
@@ -148,7 +148,7 @@ namespace Skuld.Core.Extensions
             catch (OverflowException ex)
             {
                 source = 0;
-                Log.Error("GenericExtensions", ex.Message, ex);
+                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }

@@ -1,4 +1,7 @@
 ﻿using Discord;
+using Discord.Commands;
+using Sentry;
+using Sentry.Protocol;
 using Skuld.Core.Extensions.Conversion;
 using Skuld.Core.Extensions.Formatting;
 using System;
@@ -10,7 +13,7 @@ namespace Skuld.Core.Utilities
 {
     public static class Log
     {
-        public readonly static string CurrentLogFileName = 
+        public readonly static string CurrentLogFileName =
             DateTime.UtcNow.ToString(
                 "yyyy-MM-dd",
                 CultureInfo.InvariantCulture
@@ -18,6 +21,7 @@ namespace Skuld.Core.Utilities
 
         private static StreamWriter LogFile;
         private static bool hasBeenConfigured = false;
+        private static bool isSentryEnabled = false;
 
         public static void Configure()
         {
@@ -35,9 +39,9 @@ namespace Skuld.Core.Utilities
                             Path.Combine(
                               SkuldAppContext.LogDirectory,
                               CurrentLogFileName
-                            ), 
-                            FileMode.Append, 
-                            FileAccess.Write, 
+                            ),
+                            FileMode.Append,
+                            FileAccess.Write,
                             FileShare.Read
                         )
                     )
@@ -57,6 +61,13 @@ namespace Skuld.Core.Utilities
                         )
                     );
                 }
+
+                var sentryKey = 
+                    Environment.GetEnvironmentVariable(
+                        SkuldAppContext.SentryIOEnvVar
+                );
+
+                isSentryEnabled = sentryKey != null;
             }
         }
 
@@ -86,6 +97,7 @@ namespace Skuld.Core.Utilities
 
         public static void Critical(string source,
                                     string message,
+                                    ShardedCommandContext context,
                                     Exception exception = null)
         {
             var msg = Message(source, message, LogSeverity.Critical);
@@ -93,6 +105,31 @@ namespace Skuld.Core.Utilities
             if (exception != null)
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
+
+                if (isSentryEnabled)
+                {
+                    SentrySdk.ConfigureScope(scope =>
+                    {
+                        scope.Level = SentryLevel.Fatal;
+
+                        scope.User = new User
+                        {
+                            Id = $"{context.User.Id}",
+                            Username = context.User.Username,
+                        };
+
+                        if (context != null)
+                        {
+                            scope.SetTag("user_id", $"{context.User.Id}");
+                            if (context.Guild != null)
+                            {
+                                scope.SetTag("guild_id", $"{context.Guild.Id}");
+                            }
+                            scope.SetTag("channel_id", $"{context.Channel.Id}");
+                        }
+                    });
+                    SentrySdk.CaptureException(exception);
+                }
 
                 if (LogFile != null)
                 {
@@ -106,7 +143,7 @@ namespace Skuld.Core.Utilities
             }
             else
             {
-                if(LogFile != null)
+                if (LogFile != null)
                 {
                     LogFile.WriteLine(msg);
                 }
@@ -127,6 +164,7 @@ namespace Skuld.Core.Utilities
 
         public static void Debug(string source,
                                  string message,
+                                 ShardedCommandContext context,
                                  Exception exception = null)
         {
             var msg = Message(source, message, LogSeverity.Debug);
@@ -134,6 +172,31 @@ namespace Skuld.Core.Utilities
             if (exception != null)
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
+
+                if (isSentryEnabled)
+                {
+                    SentrySdk.ConfigureScope(scope => 
+                    {
+                        scope.Level = SentryLevel.Debug;
+
+                        scope.User = new User
+                        {
+                            Id = $"{context.User.Id}",
+                            Username = context.User.Username,
+                        };
+
+                        if (context != null)
+                        {
+                            scope.SetTag("user_id", $"{context.User.Id}");
+                            if (context.Guild != null)
+                            {
+                                scope.SetTag("guild_id", $"{context.Guild.Id}");
+                            }
+                            scope.SetTag("channel_id", $"{context.Channel.Id}");
+                        }
+                    });
+                    SentrySdk.CaptureException(exception);
+                }
 
                 if (SkuldAppContext.GetLogLevel() >= LogSeverity.Debug)
                 {
@@ -168,6 +231,7 @@ namespace Skuld.Core.Utilities
 
         public static void Error(string source,
                                  string message,
+                                 ShardedCommandContext context,
                                  Exception exception = null)
         {
             var msg = Message(source, message, LogSeverity.Error);
@@ -180,6 +244,31 @@ namespace Skuld.Core.Utilities
             if (exception != null)
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
+
+                if (isSentryEnabled)
+                {
+                    SentrySdk.ConfigureScope(scope => 
+                    {
+                        scope.Level = SentryLevel.Error;
+
+                        scope.User = new User
+                        {
+                            Id = $"{context.User.Id}",
+                            Username = context.User.Username,
+                        };
+
+                        if (context != null)
+                        {
+                            scope.SetTag("user_id", $"{context.User.Id}");
+                            if (context.Guild != null)
+                            {
+                                scope.SetTag("guild_id", $"{context.Guild.Id}");
+                            }
+                            scope.SetTag("channel_id", $"{context.Channel.Id}");
+                        }
+                    });
+                    SentrySdk.CaptureException(exception);
+                }
 
                 if (LogFile != null)
                 {
@@ -204,6 +293,7 @@ namespace Skuld.Core.Utilities
 
         public static void Verbose(string source,
                                    string message,
+                                   ShardedCommandContext context,
                                    Exception exception = null)
         {
             var msg = Message(source, message, LogSeverity.Verbose);
@@ -216,6 +306,31 @@ namespace Skuld.Core.Utilities
             if (exception != null)
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
+
+                if (isSentryEnabled)
+                {
+                    SentrySdk.ConfigureScope(scope => 
+                    {
+                        scope.Level = SentryLevel.Debug;
+
+                        scope.User = new User
+                        {
+                            Id = $"{context.User.Id}",
+                            Username = context.User.Username,
+                        };
+
+                        if (context != null)
+                        {
+                            scope.SetTag("user_id", $"{context.User.Id}");
+                            if(context.Guild != null)
+                            {
+                                scope.SetTag("guild_id", $"{context.Guild.Id}");
+                            }
+                            scope.SetTag("channel_id", $"{context.Channel.Id}");
+                        }
+                    });
+                    SentrySdk.CaptureException(exception);
+                }
 
                 if (LogFile != null)
                 {
@@ -240,6 +355,7 @@ namespace Skuld.Core.Utilities
 
         public static void Warning(string source,
                                    string message,
+                                   ShardedCommandContext context,
                                    Exception exception = null)
         {
             var msg = Message(source, message, LogSeverity.Warning);
@@ -252,6 +368,31 @@ namespace Skuld.Core.Utilities
             if (exception != null)
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
+
+                if (isSentryEnabled)
+                {
+                    SentrySdk.ConfigureScope(scope => 
+                    {
+                        scope.Level = SentryLevel.Warning;
+
+                        scope.User = new User
+                        {
+                            Id = $"{context.User.Id}",
+                            Username = context.User.Username,
+                        };
+
+                        if (context != null)
+                        {
+                            scope.SetTag("user_id", $"{context.User.Id}");
+                            if (context.Guild != null)
+                            {
+                                scope.SetTag("guild_id", $"{context.Guild.Id}");
+                            }
+                            scope.SetTag("channel_id", $"{context.Channel.Id}");
+                        }
+                    });
+                    SentrySdk.CaptureException(exception);
+                }
 
                 if (LogFile != null)
                 {
