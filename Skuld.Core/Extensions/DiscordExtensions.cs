@@ -318,18 +318,25 @@ namespace Skuld.Core.Extensions
                 return module.Name;
             }
 
-            ModuleInfo previousModule = module.Parent;
-
             StringBuilder path = new StringBuilder();
 
-            while (previousModule.Parent != null)
+            ModuleInfo previousModule = module;
+
+            while (previousModule != null)
             {
-                path.Append(previousModule.Name);
-                path.Append("/");
+                path.Append(previousModule.Name??previousModule.Group);
+
+                if(previousModule.Parent != null)
+                {
+                    path.Append("/");
+                }
+
                 previousModule = previousModule.Parent;
             }
 
-            return path.ToString();
+            var split = path.ToString().Split("/");
+
+            return string.Join("/", split.Reverse());
         }
 
         public static ModuleInfo GetTopLevelParent(this ModuleInfo childModule)

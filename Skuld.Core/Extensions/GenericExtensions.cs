@@ -60,10 +60,9 @@ namespace Skuld.Core.Extensions
                     source += value;
                 }
             }
-            catch (OverflowException  ex)
+            catch
             {
                 source = ulong.MaxValue;
-                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }
@@ -77,10 +76,9 @@ namespace Skuld.Core.Extensions
                     source += value;
                 }
             }
-            catch (OverflowException ex)
+            catch
             {
                 source = ulong.MaxValue;
-                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }
@@ -94,10 +92,9 @@ namespace Skuld.Core.Extensions
                     source -= value;
                 }
             }
-            catch (OverflowException ex)
+            catch
             {
                 source = 0;
-                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }
@@ -111,10 +108,9 @@ namespace Skuld.Core.Extensions
                     source -= value;
                 }
             }
-            catch (OverflowException ex)
+            catch
             {
                 source = 0;
-                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }
@@ -128,10 +124,9 @@ namespace Skuld.Core.Extensions
                     source += value;
                 }
             }
-            catch (OverflowException ex)
+            catch
             {
                 source = uint.MaxValue;
-                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }
@@ -145,10 +140,9 @@ namespace Skuld.Core.Extensions
                     source -= value;
                 }
             }
-            catch (OverflowException ex)
+            catch
             {
                 source = 0;
-                Log.Error("GenericExtensions", ex.Message, null, ex);
             }
             return source;
         }
