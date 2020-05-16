@@ -6,7 +6,8 @@ namespace Skuld.Core.Extensions
 {
     public static class StringExtensions
     {
-        private static readonly Dictionary<string, int> alphabet = new Dictionary<string, int>
+        private static readonly Dictionary<string, int> alphabet = 
+            new Dictionary<string, int>
         {
             { "a", 0 },
             { "b", 1 },
@@ -97,7 +98,11 @@ namespace Skuld.Core.Extensions
         };
 
         //https://stackoverflow.com/a/8809437
-        public static string ReplaceFirst(this string text, string search, string replace)
+        public static string ReplaceFirst(
+            this string text, 
+            string search, 
+            string replace
+        )
         {
             int pos = text.IndexOf(search);
 
@@ -108,7 +113,11 @@ namespace Skuld.Core.Extensions
         }
 
         //https://stackoverflow.com/a/14826068
-        public static string ReplaceLast(this string text, string search, string replace)
+        public static string ReplaceLast(
+            this string text, 
+            string search, 
+            string replace
+        )
         {
             int pos = text.LastIndexOf(search);
 
