@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using Discord;
+using HtmlAgilityPack;
 using System;
 using System.IO;
 using System.Net;
@@ -12,10 +13,39 @@ namespace Skuld.Core.Utilities
 {
     public static class HttpWebClient
     {
-        public static string UAGENT = "Mozilla/5.0 (compatible; SkuldBot/ApiVersion=" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + "; +https://github.com/Skuldbot/Skuld/)";
+        public static string UAGENT = null;
+
+        public static void SetUserAgent(ISelfUser self)
+        {
+            StringBuilder userAgent = new StringBuilder();
+
+            userAgent.Append(self.Username);
+            userAgent.Append("-");
+            userAgent.Append(self.Discriminator);
+            userAgent.Append("/");
+            userAgent.Append(
+                Assembly
+                .GetExecutingAssembly()
+                .GetName()
+                .Version
+                .ToString()
+            );
+            userAgent.Append(" (Discord.Net; +");
+            userAgent.Append(SkuldAppContext.Website);
+            userAgent.Append(") DBots/");
+            userAgent.Append(self.Id);
+
+            UAGENT = userAgent.ToString();
+        }
 
         public static HttpWebRequest CreateWebRequest(Uri uri, byte[] auth = null)
         {
+            if(UAGENT == null)
+            {
+                throw new NullReferenceException(
+                $"User Agent is not set, call {nameof(SetUserAgent)} method"
+                );
+            }
             var returncli = (HttpWebRequest)WebRequest.Create(uri);
             if (auth != null)
             {
