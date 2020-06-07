@@ -37,18 +37,19 @@ namespace Skuld.Core.Extensions.Formatting
             if(years > 0)
             {
                 builder.Append(years.ToFormattedString());
+
                 if (years > 2)
                 {
                     builder.Append(" years");
                 }
-                if (years < 2)
+                else
                 {
                     builder.Append(" year");
                 }
 
                 builder.Append(" and ");
 
-                days = days - (years * 365);
+                days -= years * 365;
             }
 
             if(days > 0)

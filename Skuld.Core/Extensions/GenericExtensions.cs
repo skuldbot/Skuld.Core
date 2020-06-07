@@ -192,5 +192,7 @@ namespace Skuld.Core.Extensions
             return obj;
         }
 
+        public static bool Is<T>(this Exception exception) where T : Exception
+            => exception.GetType() == typeof(T);
     }
 }
