@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace Skuld.Core.Extensions
 {
@@ -159,5 +160,41 @@ namespace Skuld.Core.Extensions
             => (ulong)(dateTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
         #endregion DateTime
+
+        public static object Then(this object obj, Action<object> func)
+        {
+            func.Invoke(obj);
+
+            return obj;
+        }
+
+        public static object Then(this object obj, Func<object, Task> func)
+        {
+            Task.Run(() => func.Invoke(obj));
+
+            return obj;
+        }
+
+        public static object ThenAfter(this object obj, Action<object> func, int milliseconds)
+        {
+            Task.Delay(milliseconds);
+
+            func.Invoke(obj);
+
+            return obj;
+        }
+
+        public static object ThenAfter(this object obj, Func<object, Task> func, int milliseconds)
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(milliseconds).ConfigureAwait(false);
+
+                await func.Invoke(obj).ConfigureAwait(false);
+            });
+
+            return obj;
+        }
+
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Skuld.Core.Models
 {
-    public struct EventResult<T> : IEquatable<EventResult<T>>
+    public class EventResult<T> : IEquatable<EventResult<T>>
     {
         public bool Successful;
         public string Error;
@@ -84,6 +85,46 @@ namespace Skuld.Core.Models
         public EventResult<T> WithError(string error)
         {
             Error = error;
+            return this;
+        }
+
+        public EventResult<T> IsError(Action<T> func)
+        {
+            if(!Successful)
+            {
+                func.Invoke(Data);
+            }
+
+            return this;
+        }
+
+        public EventResult<T> IsSuccess(Action<T> func)
+        {
+            if(Successful)
+            {
+                func.Invoke(Data);
+            }
+
+            return this;
+        }
+
+        public EventResult<T> IsErrorAsync(Func<T, Task> func)
+        {
+            if(!Successful)
+            {
+                Task.Run(() => func.Invoke(Data));
+            }
+
+            return this;
+        }
+
+        public EventResult<T> IsSuccessAsync(Func<T, Task> func)
+        {
+            if (Successful)
+            {
+                Task.Run(() => func.Invoke(Data));
+            }
+
             return this;
         }
     }
