@@ -168,12 +168,8 @@ namespace Skuld.Core.Extensions
             return obj;
         }
 
-        public static object Then(this object obj, Func<object, Task> func)
-        {
-            Task.Run(() => func.Invoke(obj));
-
-            return obj;
-        }
+        public static object ThenAsync(this object obj, Func<object, Task<object>> func)
+            => func.Invoke(obj).GetAwaiter().GetResult();
 
         public static object ThenAfter(this object obj, Action<object> func, int milliseconds)
         {
@@ -184,13 +180,13 @@ namespace Skuld.Core.Extensions
             return obj;
         }
 
-        public static object ThenAfter(this object obj, Func<object, Task> func, int milliseconds)
+        public static object ThenAfterAsync(this object obj, Func<object, Task<object>> func, int milliseconds)
         {
             Task.Run(async () =>
             {
                 await Task.Delay(milliseconds).ConfigureAwait(false);
 
-                await func.Invoke(obj).ConfigureAwait(false);
+                obj = await func.Invoke(obj).ConfigureAwait(false);
             });
 
             return obj;
