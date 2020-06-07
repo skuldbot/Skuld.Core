@@ -88,41 +88,41 @@ namespace Skuld.Core.Models
             return this;
         }
 
-        public EventResult<T> IsError(Action<T> func)
+        public EventResult<T> IsError(Action<EventResult<T>> func)
         {
             if(!Successful)
             {
-                func.Invoke(Data);
+                func.Invoke(this);
             }
 
             return this;
         }
 
-        public EventResult<T> IsSuccess(Action<T> func)
+        public EventResult<T> IsSuccess(Action<EventResult<T>> func)
         {
             if(Successful)
             {
-                func.Invoke(Data);
+                func.Invoke(this);
             }
 
             return this;
         }
 
-        public EventResult<T> IsErrorAsync(Func<T, Task> func)
+        public EventResult<T> IsErrorAsync(Func<EventResult<T>, Task> func)
         {
             if(!Successful)
             {
-                Task.Run(() => func.Invoke(Data));
+                Task.Run(() => func.Invoke(this));
             }
 
             return this;
         }
 
-        public EventResult<T> IsSuccessAsync(Func<T, Task> func)
+        public EventResult<T> IsSuccessAsync(Func<EventResult<T>, Task> func)
         {
             if (Successful)
             {
-                Task.Run(() => func.Invoke(Data));
+                Task.Run(() => func.Invoke(this));
             }
 
             return this;
