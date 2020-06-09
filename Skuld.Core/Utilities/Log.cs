@@ -97,7 +97,7 @@ namespace Skuld.Core.Utilities
 
         public static void Critical(string source,
                                     string message,
-                                    ShardedCommandContext context,
+                                    ICommandContext context,
                                     Exception exception = null)
         {
             var msg = Message(source, message, LogSeverity.Critical);
@@ -177,7 +177,7 @@ namespace Skuld.Core.Utilities
 
         public static void Debug(string source,
                                  string message,
-                                 ShardedCommandContext context,
+                                 ICommandContext context,
                                  Exception exception = null)
         {
             var msg = Message(source, message, LogSeverity.Debug);
@@ -257,7 +257,7 @@ namespace Skuld.Core.Utilities
 
         public static void Error(string source,
                                  string message,
-                                 ShardedCommandContext context,
+                                 ICommandContext context,
                                  Exception exception = null)
         {
             var msg = Message(source, message, LogSeverity.Error);
@@ -332,7 +332,7 @@ namespace Skuld.Core.Utilities
 
         public static void Verbose(string source,
                                    string message,
-                                   ShardedCommandContext context,
+                                   ICommandContext context,
                                    Exception exception = null)
         {
             var msg = Message(source, message, LogSeverity.Verbose);
@@ -407,7 +407,7 @@ namespace Skuld.Core.Utilities
 
         public static void Warning(string source,
                                    string message,
-                                   ShardedCommandContext context,
+                                   ICommandContext context,
                                    Exception exception = null)
         {
             var msg = Message(source, message, LogSeverity.Warning);
