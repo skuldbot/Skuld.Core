@@ -148,6 +148,12 @@ namespace Skuld.Core.Extensions
             return source;
         }
 
+        public static float Normalise(this float value, float start, float end)
+            => (value - start) / (end - start);
+
+        public static double Normalise(this double value, double start, double end)
+            => (value - start) / (end - start);
+
         #region DateTime
 
         public static int MonthsBetween(this DateTime date1, DateTime date2)
@@ -157,7 +163,7 @@ namespace Skuld.Core.Extensions
             => new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(Convert.ToDouble(epoch));
 
         public static ulong ToEpoch(this DateTime dateTime)
-            => (ulong)(dateTime.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            => (ulong)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
         #endregion DateTime
 
@@ -193,6 +199,9 @@ namespace Skuld.Core.Extensions
         }
 
         public static bool Is<T>(this Exception exception) where T : Exception
-            => exception.GetType() == typeof(T);
+            => exception is T;
+
+        public static T As<T>(this object _, T item)
+            => item;
     }
 }
