@@ -1,4 +1,6 @@
-﻿using Skuld.Core.Utilities;
+﻿using Discord.Commands;
+using Sentry;
+using Skuld.Core.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -203,5 +205,29 @@ namespace Skuld.Core.Extensions
 
         public static T As<T>(this object _, T item)
             => item;
+
+        public static SentryEvent ToSentryEvent<T>(this T exception) where T : Exception
+        {
+            return new SentryEvent
+            {
+                Message = exception.ToString()
+            };
+        }
+
+        public static SentryEvent ToSentryEvent(this ICommandContext context, Exception exception)
+        {
+            var sentryEvent = exception.ToSentryEvent();
+
+            sentryEvent.User = new Sentry.Protocol.User
+            {
+                Username = context.Message.Author.FullName(),
+                Id = context.Message.Author.Id.ToString()
+            };
+
+            sentryEvent.SetTag("guild_id", context.Guild?.Id.ToString() ?? "DMs");
+            sentryEvent.SetTag("channel_id", context.Channel.Id.ToString());
+
+            return sentryEvent;
+        }
     }
 }

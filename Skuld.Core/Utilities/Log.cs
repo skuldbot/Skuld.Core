@@ -1,7 +1,9 @@
 ﻿using Discord;
 using Discord.Commands;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Sentry;
 using Sentry.Protocol;
+using Skuld.Core.Extensions;
 using Skuld.Core.Extensions.Conversion;
 using Skuld.Core.Extensions.Formatting;
 using System;
@@ -21,9 +23,9 @@ namespace Skuld.Core.Utilities
 
         private static StreamWriter LogFile;
         private static bool hasBeenConfigured = false;
-        private static bool isSentryEnabled = false;
+        private static ISentryClient sentryClient;
 
-        public static void Configure()
+        public static void Configure(ISentryClient sentry)
         {
             if (!Directory.Exists(SkuldAppContext.LogDirectory))
             {
@@ -62,12 +64,7 @@ namespace Skuld.Core.Utilities
                     );
                 }
 
-                var sentryKey = 
-                    Environment.GetEnvironmentVariable(
-                        SkuldAppContext.SentryIOEnvVar
-                );
-
-                isSentryEnabled = sentryKey != null;
+                sentryClient = sentry;
             }
         }
 
@@ -75,8 +72,6 @@ namespace Skuld.Core.Utilities
                                       string message,
                                       LogSeverity severity)
         {
-            Configure();
-
             var lines = new List<string[]>
             {
                 new[]
@@ -106,42 +101,26 @@ namespace Skuld.Core.Utilities
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-                if (isSentryEnabled)
+                if (sentryClient != null)
                 {
-                    SentrySdk.ConfigureScope(scope =>
-                    {
-                        scope.Level = SentryLevel.Fatal;
+                    SentryEvent @event = null;
 
-                        if (context != null)
-                        {
-                            scope.User = new User
-                            {
-                                Id = $"{context.User.Id}",
-                                Username = context.User.Username,
-                            };
-                            scope.SetTag("user_id", $"{context.User.Id}");
-                            if (context.Guild != null)
-                            {
-                                scope.SetTag("guild_id", $"{context.Guild.Id}");
-                            }
-                            scope.SetTag("channel_id", $"{context.Channel.Id}");
-                        }
-                        else
-                        {
-                            scope.User = new User
-                            {
-                                Id = "0",
-                                Username = "",
-                            };
-                            scope.SetTag("user_id", "");
-                            if (context.Guild != null)
-                            {
-                                scope.SetTag("guild_id", "");
-                            }
-                            scope.SetTag("channel_id", "");
-                        }
-                    });
-                    SentrySdk.CaptureException(exception);
+                    if (context != null)
+                    {
+                        @event = context.ToSentryEvent(exception);
+                    }
+                    else if (exception != null)
+                    {
+                        @event = exception.ToSentryEvent();
+                    }
+
+                    @event.Level = SentryLevel.Fatal;
+                    @event.SetTag("Source", source);
+
+                    if (@event != null)
+                    {
+                        sentryClient.CaptureEvent(@event);
+                    }
                 }
 
                 if (LogFile != null)
@@ -185,44 +164,6 @@ namespace Skuld.Core.Utilities
             if (exception != null)
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
-
-                if (isSentryEnabled)
-                {
-                    SentrySdk.ConfigureScope(scope => 
-                    {
-                        scope.Level = SentryLevel.Debug;
-
-                        if (context != null)
-                        {
-                            scope.User = new User
-                            {
-                                Id = $"{context.User.Id}",
-                                Username = context.User.Username,
-                            };
-                            scope.SetTag("user_id", $"{context.User.Id}");
-                            if (context.Guild != null)
-                            {
-                                scope.SetTag("guild_id", $"{context.Guild.Id}");
-                            }
-                            scope.SetTag("channel_id", $"{context.Channel.Id}");
-                        }
-                        else
-                        {
-                            scope.User = new User
-                            {
-                                Id = "0",
-                                Username = "",
-                            };
-                            scope.SetTag("user_id", "");
-                            if (context.Guild != null)
-                            {
-                                scope.SetTag("guild_id", "");
-                            }
-                            scope.SetTag("channel_id", "");
-                        }
-                    });
-                    SentrySdk.CaptureException(exception);
-                }
 
                 if (SkuldAppContext.GetLogLevel() >= LogSeverity.Debug)
                 {
@@ -271,43 +212,28 @@ namespace Skuld.Core.Utilities
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-                if (isSentryEnabled)
+                if (sentryClient != null)
                 {
-                    SentrySdk.ConfigureScope(scope => 
-                    {
-                        scope.Level = SentryLevel.Error;
+                    SentryEvent @event = null;
 
-                        if (context != null)
-                        {
-                            scope.User = new User
-                            {
-                                Id = $"{context.User.Id}",
-                                Username = context.User.Username,
-                            };
-                            scope.SetTag("user_id", $"{context.User.Id}");
-                            if (context.Guild != null)
-                            {
-                                scope.SetTag("guild_id", $"{context.Guild.Id}");
-                            }
-                            scope.SetTag("channel_id", $"{context.Channel.Id}");
-                        }
-                        else
-                        {
-                            scope.User = new User
-                            {
-                                Id = "0",
-                                Username = "",
-                            };
-                            scope.SetTag("user_id", "");
-                            if (context.Guild != null)
-                            {
-                                scope.SetTag("guild_id", "");
-                            }
-                            scope.SetTag("channel_id", "");
-                        }
-                    });
-                    SentrySdk.CaptureException(exception);
+                    if (context != null)
+                    {
+                        @event = context.ToSentryEvent(exception);
+                    }
+                    else if (exception != null)
+                    {
+                        @event = exception.ToSentryEvent();
+                    }
+
+                    @event.Level = SentryLevel.Error;
+                    @event.SetTag("Source", source);
+
+                    if (@event != null)
+                    {
+                        sentryClient.CaptureEvent(@event);
+                    }
                 }
+
 
                 if (LogFile != null)
                 {
@@ -346,44 +272,6 @@ namespace Skuld.Core.Utilities
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-                if (isSentryEnabled)
-                {
-                    SentrySdk.ConfigureScope(scope => 
-                    {
-                        scope.Level = SentryLevel.Debug;
-
-                        if (context != null)
-                        {
-                            scope.User = new User
-                            {
-                                Id = $"{context.User.Id}",
-                                Username = context.User.Username,
-                            };
-                            scope.SetTag("user_id", $"{context.User.Id}");
-                            if (context.Guild != null)
-                            {
-                                scope.SetTag("guild_id", $"{context.Guild.Id}");
-                            }
-                            scope.SetTag("channel_id", $"{context.Channel.Id}");
-                        }
-                        else
-                        {
-                            scope.User = new User
-                            {
-                                Id = "0",
-                                Username = "",
-                            };
-                            scope.SetTag("user_id", "");
-                            if (context.Guild != null)
-                            {
-                                scope.SetTag("guild_id", "");
-                            }
-                            scope.SetTag("channel_id", "");
-                        }
-                    });
-                    SentrySdk.CaptureException(exception);
-                }
-
                 if (LogFile != null)
                 {
                     LogFile.WriteLine(m);
@@ -421,42 +309,26 @@ namespace Skuld.Core.Utilities
             {
                 var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-                if (isSentryEnabled)
+                if (sentryClient != null)
                 {
-                    SentrySdk.ConfigureScope(scope => 
-                    {
-                        scope.Level = SentryLevel.Warning;
+                    SentryEvent @event = null;
 
-                        if (context != null)
-                        {
-                            scope.User = new User
-                            {
-                                Id = $"{context.User.Id}",
-                                Username = context.User.Username,
-                            };
-                            scope.SetTag("user_id", $"{context.User.Id}");
-                            if (context.Guild != null)
-                            {
-                                scope.SetTag("guild_id", $"{context.Guild.Id}");
-                            }
-                            scope.SetTag("channel_id", $"{context.Channel.Id}");
-                        }
-                        else
-                        {
-                            scope.User = new User
-                            {
-                                Id = "0",
-                                Username = "",
-                            };
-                            scope.SetTag("user_id", "");
-                            if (context.Guild != null)
-                            {
-                                scope.SetTag("guild_id", "");
-                            }
-                            scope.SetTag("channel_id", "");
-                        }
-                    });
-                    SentrySdk.CaptureException(exception);
+                    if (context != null)
+                    {
+                        @event = context.ToSentryEvent(exception);
+                    }
+                    else if (exception != null)
+                    {
+                        @event = exception.ToSentryEvent();
+                    }
+
+                    @event.Level = SentryLevel.Warning;
+                    @event.SetTag("Source", source);
+
+                    if (@event != null)
+                    {
+                        sentryClient.CaptureEvent(@event);
+                    }
                 }
 
                 if (LogFile != null)
