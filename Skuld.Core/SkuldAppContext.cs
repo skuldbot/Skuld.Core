@@ -15,6 +15,8 @@ namespace Skuld.Core
         public static string TargetFrameworkName => AppContext.TargetFrameworkName;
         public static string ConfigurationId { get; private set; }
 
+        public const int PLACEIMAGESIZE = 500;
+
         public const string Website = "https://skuldbot.uk";
         public const string WebsiteLeaderboard = Website + "/leaderboard";
         public const string LeaderboardExperience = WebsiteLeaderboard + "/experience";
@@ -57,23 +59,22 @@ namespace Skuld.Core
         public static string FontDirectory = Path.Combine(StorageDirectory, "fonts");
 
         public static readonly OperatingSystem WindowsVersion = Environment.OSVersion;
-        public static readonly MemoryStats Memory = new MemoryStats();
 
         public static readonly KeyValuePair<AssemblyName, GitRepoStruct> Skuld = new KeyValuePair<AssemblyName, GitRepoStruct>(
             Assembly.GetEntryAssembly().GetName(),
             new GitRepoStruct("Skuldbot", "Skuld"));
-    }
 
-    public class MemoryStats
-    {
-        public long GetKBUsage
-            => Process.GetCurrentProcess().WorkingSet64 / 1024;
+        public static class MemoryStats
+        {
+            public static long GetKBUsage
+                => Process.GetCurrentProcess().WorkingSet64 / 1024;
 
-        public long GetMBUsage
-            => GetKBUsage / 1024;
+            public static long GetMBUsage
+                => GetKBUsage / 1024;
 
-        public long GetGBUsage
-            => GetMBUsage / 1024;
+            public static long GetGBUsage
+                => GetMBUsage / 1024;
+        }
     }
 
     public struct GitRepoStruct

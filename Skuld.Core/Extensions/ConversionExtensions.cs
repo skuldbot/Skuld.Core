@@ -5,54 +5,44 @@ using System.Text;
 
 namespace Skuld.Core.Extensions.Conversion
 {
-    public static class ConversionExtensions
-    {
-        public static bool ToBool(this string data)
-        {
-            switch (data.ToLowerInvariant())
-            {
-                case "true":
-                case "1":
-                case "y":
-                    return true;
+	public static class ConversionExtensions
+	{
+		public static bool ToBool(this string data)
+			=> (data.ToLowerInvariant()) switch
+			{
+				"true" or "1" or "y" => true,
+				"false" or "0" or "n" => false,
+				_ => throw new Exception("Cannot Convert from \"" + data + "\" to Boolean"),
+			};
 
-                case "false":
-                case "0":
-                case "n":
-                    return false;
+		public static MemoryStream ToMemoryStream(this string value)
+			=> new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
 
-                default:
-                    throw new Exception("Cannot Convert from \"" + data + "\" to Boolean");
-            }
-        }
+		public static Uri ToUri(this string value)
+			=> new Uri(value);
 
-        public static MemoryStream ToMemoryStream(this string value)
-            => new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
+		public static ConsoleColor SeverityToColor(this LogSeverity sev)
+			=> sev switch
+			{
+				LogSeverity.Critical => ConsoleColor.Red,
+				LogSeverity.Error => ConsoleColor.Red,
+				LogSeverity.Info => ConsoleColor.Green,
+				LogSeverity.Warning => ConsoleColor.Yellow,
+				LogSeverity.Verbose => ConsoleColor.Cyan,
+				_ => ConsoleColor.White,
+			};
 
-        public static Uri ToUri(this string value)
-            => new Uri(value);
+		public static double Remap(this double value, double min1, double max1, double min2, double max2)
+			=> min2 + (max2 - min2) * ((value - min1) / (max1 - min1));
 
-        public static ConsoleColor SeverityToColor(this LogSeverity sev)
-        {
-            switch (sev)
-            {
-                case LogSeverity.Critical:
-                    return ConsoleColor.Red;
-                case LogSeverity.Error:
-                    return ConsoleColor.Red;
-                case LogSeverity.Info:
-                    return ConsoleColor.Green;
-                case LogSeverity.Warning:
-                    return ConsoleColor.Yellow;
-                case LogSeverity.Verbose:
-                    return ConsoleColor.Cyan;
+		public static Color Lerp(this Color a, Color b, double t)
+			=> a.Lerp(b, (float)t);
 
-                default:
-                    return ConsoleColor.White;
-            }
-        }
-
-        public static double Remap(this double value, double min1, double max1, double min2, double max2)
-            => min2 + (max2 - min2) * ((value - min1) / (max1 - min1));
-    }
+		public static Color Lerp(this Color a, Color b, float t)
+			=> new Color(
+					a.R + (b.R - a.R) * t,
+					a.G + (b.G - a.G) * t,
+					a.B + (b.B - a.B) * t
+				);
+	}
 }
