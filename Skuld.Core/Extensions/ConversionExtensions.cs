@@ -16,10 +16,10 @@ namespace Skuld.Core.Extensions.Conversion
 			};
 
 		public static MemoryStream ToMemoryStream(this string value)
-			=> new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
+			=> new(Encoding.UTF8.GetBytes(value ?? ""));
 
 		public static Uri ToUri(this string value)
-			=> new Uri(value);
+			=> new(value);
 
 		public static ConsoleColor SeverityToColor(this LogSeverity sev)
 			=> sev switch
@@ -39,10 +39,10 @@ namespace Skuld.Core.Extensions.Conversion
 			=> a.Lerp(b, (float)t);
 
 		public static Color Lerp(this Color a, Color b, float t)
-			=> new Color(
-					a.R + (b.R - a.R) * t,
-					a.G + (b.G - a.G) * t,
-					a.B + (b.B - a.B) * t
+			=> new(
+					Math.Clamp(a.R + (b.R - a.R) * t, 0, 1),
+					Math.Clamp(a.G + (b.G - a.G) * t, 0, 1),
+					Math.Clamp(a.B + (b.B - a.B) * t, 0, 1)
 				);
 	}
 }

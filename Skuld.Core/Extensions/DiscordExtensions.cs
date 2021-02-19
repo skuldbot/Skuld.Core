@@ -5,6 +5,7 @@ using Skuld.Core.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,7 +75,7 @@ namespace Skuld.Core.Extensions
 
 		public static async Task<IList<IGuildUser>> GetUsersWithRoleAsync([NotNull] this IGuild guild, [NotNull] IRole role)
 		{
-			List<IGuildUser> usersWithRole = new List<IGuildUser>();
+			List<IGuildUser> usersWithRole = new();
 
 			await guild.DownloadUsersAsync().ConfigureAwait(false);
 			var users = await guild.GetUsersAsync().ConfigureAwait(false);
@@ -102,7 +103,7 @@ namespace Skuld.Core.Extensions
 
 		public static string ActivityToString([NotNull] this IActivity activity)
 		{
-			StringBuilder builder = new StringBuilder();
+			StringBuilder builder = new();
 
 			switch (activity.Type)
 			{
@@ -123,7 +124,7 @@ namespace Skuld.Core.Extensions
 					break;
 			}
 
-			builder = builder.Append(" ");
+			builder = builder.Append(' ');
 			builder = builder.Append(activity.Name);
 
 			return builder.ToString();
@@ -212,18 +213,18 @@ namespace Skuld.Core.Extensions
 			return message
 				.ReplaceFirst("-m", "**" + user.Mention + "**")
 				.ReplaceFirst("-s", "**" + guild.Name + "**")
-				.ReplaceFirst("-uc", Convert.ToString(guild.MemberCount))
+				.ReplaceFirst("-uc", Convert.ToString(guild.MemberCount, CultureInfo.InvariantCulture))
 				.ReplaceFirst("-ud", "**" + user.FullName() + "**")
 				.ReplaceFirst("-u", "**" + user.Username + "**");
 		}
 
-		public static string ReplaceSocialEventMessage(this string message, string name, string url)
+		public static string ReplaceSocialEventMessage(this string message, string name, Uri url)
 		{
 			if (string.IsNullOrEmpty(message)) return message;
 
 			return message
 				.ReplaceFirst("-name", "**" + name + "**")
-				.ReplaceFirst("-url", url);
+				.ReplaceFirst("-url", url.OriginalString);
 		}
 
 		public static string PruneMention(this string message, ulong id)
@@ -279,7 +280,7 @@ namespace Skuld.Core.Extensions
 			}
 			if (embed.Timestamp.HasValue)
 			{
-				message += " | " + embed.Timestamp.Value.ToString("dd'/'MM'/'yyyy hh:mm:ss tt");
+				message += " | " + embed.Timestamp.Value.ToString("dd'/'MM'/'yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
 			}
 
 			return message;
@@ -315,7 +316,7 @@ namespace Skuld.Core.Extensions
 				return module.Name;
 			}
 
-			StringBuilder path = new StringBuilder();
+			StringBuilder path = new();
 
 			ModuleInfo previousModule = module;
 
@@ -325,7 +326,7 @@ namespace Skuld.Core.Extensions
 
 				if (previousModule.Parent != null)
 				{
-					path.Append("/");
+					path.Append('/');
 				}
 
 				previousModule = previousModule.Parent;

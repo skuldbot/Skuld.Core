@@ -9,9 +9,9 @@ namespace Skuld.Core.Utilities
 		public const double PHI = 1.618;
 		public const double LevelModifier = 2.5;
 		public static GuildPermissions ModeratorPermissions
-			= new GuildPermissions(268443648);
+			= new(268443648);
 		public static ChannelPermissions RequiredForStarboard
-			= new ChannelPermissions(19520);
+			= new(19520);
 
 		#region Response Emojis
 
@@ -103,9 +103,9 @@ namespace Skuld.Core.Utilities
 
 		#region Regex
 
-		public static Regex UserMentionRegex = new Regex("<@.?[0-9]*?>");
-		public static Regex RoleMentionRegex = new Regex("<&[0-9]*?>");
-		public static Regex ChannelMentionRegex = new Regex("<#[0-9]*?>");
+		public static Regex UserMentionRegex = new("<@.?[0-9]*?>");
+		public static Regex RoleMentionRegex = new("<&[0-9]*?>");
+		public static Regex ChannelMentionRegex = new("<#[0-9]*?>");
 
 		#endregion Regex
 	}
