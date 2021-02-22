@@ -99,6 +99,18 @@ namespace Skuld.Core.Extensions
 			"🇿"
 		};
 
+		public static bool AnyStartWith(this IEnumerable<string> collection, string needle)
+		{
+			return collection.Any(x => x.StartsWith(needle));
+		}
+
+		public static bool AnyStartWith(this IEnumerable<string> collection, string needle, out string result)
+		{
+			result = collection.FirstOrDefault(x => x.StartsWith(needle));
+
+			return !string.IsNullOrEmpty(result);
+		}
+
 		//https://stackoverflow.com/a/8809437
 		public static string ReplaceFirst(
 			this string text,
