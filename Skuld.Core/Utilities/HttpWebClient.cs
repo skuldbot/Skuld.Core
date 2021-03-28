@@ -138,7 +138,7 @@ namespace Skuld.Core.Utilities
 			}
 		}
 
-		public static async Task<Stream> ReturnStreamAsync(Uri url, byte[] headers = null)
+		public static async Task<Stream> GetStreamAsync(Uri url, byte[] headers = null)
 		{
 			try
 			{

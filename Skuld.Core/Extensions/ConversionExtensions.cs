@@ -44,5 +44,16 @@ namespace Skuld.Core.Extensions.Conversion
 					Math.Clamp(a.G + (b.G - a.G) * t, 0, 1),
 					Math.Clamp(a.B + (b.B - a.B) * t, 0, 1)
 				);
+
+		public static Stream ToStream(this string message)
+		{
+			var stream = new MemoryStream();
+			var sw = new StreamWriter(stream);
+			sw.Write(message);
+			sw.Flush();
+			stream.Position = 0;
+
+			return stream;
+		}
 	}
 }
