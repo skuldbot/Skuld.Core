@@ -14,21 +14,28 @@ namespace Skuld.Core
 	public static class SkuldAppContext
 	{
 		public static string BaseDirectory => AppContext.BaseDirectory;
+
+		public static string StorageDirectory = Path.Combine(BaseDirectory, "storage");
+		public static string LogDirectory = Path.Combine(BaseDirectory, "logs");
+		public static string FontDirectory = Path.Combine(StorageDirectory, "fonts");
+
 		public static string TargetFrameworkName => AppContext.TargetFrameworkName;
 		public static string ConfigurationId { get; private set; }
 
 		public const int PLACEIMAGESIZE = 500;
 
-		public const string Website = "https://skuldbot.uk";
+		public const string Website = "https://skuld.bot";
+
 		public const string WebsiteLeaderboard = Website + "/leaderboard";
 		public const string LeaderboardExperience = WebsiteLeaderboard + "/experience";
 		public const string LeaderboardMoney = WebsiteLeaderboard + "/money";
+
 		public const string ConfigEnvVar = "SKULD_CONFIGID";
 		public const string ConStrEnvVar = "SKULD_CONNSTR";
 		public const string LogLvlEnvVar = "SKULD_LOGLEVEL";
 		public const string SentryIOEnvVar = "SKULD_SENTRYIO";
-		private static readonly Regex regex = new(@"((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)", RegexOptions.IgnoreCase);
-		public static Regex LinkRegex = regex;
+
+		public static readonly Regex LinkRegex = new(@"((http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)", RegexOptions.IgnoreCase);
 
 		public static string GetCaller([CallerMemberName] string caller = null)
 			=> caller;
@@ -55,24 +62,19 @@ namespace Skuld.Core
 
 		public static bool TryGetSwitch(string switchName, out bool isEnabled) => AppContext.TryGetSwitch(switchName, out isEnabled);
 
-		public static string StorageDirectory = Path.Combine(BaseDirectory, "storage");
-
-		public static string LogDirectory = Path.Combine(BaseDirectory, "logs");
-
-		public static string FontDirectory = Path.Combine(StorageDirectory, "fonts");
-
-		public static readonly OperatingSystem WindowsVersion = Environment.OSVersion;
+		public static readonly OperatingSystem OSVersion = Environment.OSVersion;
 
 		public static readonly KeyValuePair<AssemblyName, GitRepoStruct> Skuld = new(
 			Assembly.GetEntryAssembly().GetName(),
-			new GitRepoStruct("Skuldbot", "Skuld"));
+			new GitRepoStruct("Skuldbot", "Skuld")
+		);
 
 		//https://medium.com/@jackwild/getting-cpu-usage-in-net-core-7ef825831b8b
 		public static async Task<double> GetCurrentCPUUsage()
 		{
 			var startTime = DateTime.UtcNow;
 			var startCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
-			await Task.Delay(500);
+			await Task.Delay(125);
 
 			var endTime = DateTime.UtcNow;
 			var endCpuUsage = Process.GetCurrentProcess().TotalProcessorTime;
@@ -84,24 +86,23 @@ namespace Skuld.Core
 		}
 
 		public static IEnumerable<Assembly> GetRequiredAssemblies(Assembly analyzedAssembly)
-		{
-			return AppDomain.CurrentDomain.GetAssemblies()
-				.Where(a => a.GetReferencedAssemblies().ToList().Contains(analyzedAssembly.GetName()));
-		}
+			=> AppDomain.CurrentDomain
+				.GetAssemblies()
+				.Where(a => a.GetReferencedAssemblies()
+				.ToList()
+				.Contains(analyzedAssembly.GetName()));
 
 		//https://stackoverflow.com/a/8850495
 		public static IEnumerable<Assembly> GetDependentAssemblies(Assembly analyzedAssembly)
-		{
-			return AppDomain.CurrentDomain.GetAssemblies()
+			=> AppDomain.CurrentDomain
+				.GetAssemblies()
 				.Where(a => GetNamesOfAssembliesReferencedBy(a)
-									.Contains(analyzedAssembly.FullName));
-		}
+				.Contains(analyzedAssembly.FullName));
 
 		public static IEnumerable<string> GetNamesOfAssembliesReferencedBy(Assembly assembly)
-		{
-			return assembly.GetReferencedAssemblies()
+			=> assembly
+				.GetReferencedAssemblies()
 				.Select(assemblyName => assemblyName.FullName);
-		}
 
 		public static class MemoryStats
 		{
@@ -128,8 +129,6 @@ namespace Skuld.Core
 		}
 
 		public override string ToString()
-		{
-			return $"https://github.com/{Owner}/{Repo}";
-		}
+			=> $"https://github.com/{Owner}/{Repo}";
 	}
 }
