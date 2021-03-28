@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace Skuld.Core.Models
 {
 	public class EventResult : IEquatable<EventResult>
 	{
-		public bool Successful;
-		public string Error;
-		public Exception Exception;
+		public bool Successful { get; set; }
+		public string Error { get; set; }
+		[JsonIgnore] public Exception Exception { get; set; }
 
 		public override bool Equals(object obj)
 		{
@@ -118,11 +119,20 @@ namespace Skuld.Core.Models
 			Error = error;
 			return this;
 		}
+
+		public virtual string ToJson()
+		{
+			return JsonConvert.SerializeObject(this, new JsonSerializerSettings()
+			{
+				NullValueHandling = NullValueHandling.Include,
+				Formatting = Formatting.Indented
+			});
+		}
 	}
 
 	public class EventResult<T> : EventResult
 	{
-		public T Data;
+		public T Data { get; set; }
 
 		public override bool Equals(object obj)
 		{
@@ -192,6 +202,18 @@ namespace Skuld.Core.Models
 			return this;
 		}
 
+		public EventResult<T> WithException(Exception exception)
+		{
+			Exception = exception;
+			return this;
+		}
+
+		public EventResult<T> WithError(string error)
+		{
+			Error = error;
+			return this;
+		}
+
 		public EventResult<T> IsError(Action<EventResult<T>> func)
 		{
 			if (!Successful)
@@ -230,6 +252,15 @@ namespace Skuld.Core.Models
 			}
 
 			return this;
+		}
+
+		public override string ToJson()
+		{
+			return JsonConvert.SerializeObject(this, new JsonSerializerSettings()
+			{
+				NullValueHandling = NullValueHandling.Include,
+				Formatting = Formatting.Indented
+			});
 		}
 	}
 }
