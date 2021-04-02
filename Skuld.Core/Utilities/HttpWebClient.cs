@@ -40,14 +40,14 @@ namespace Skuld.Core.Utilities
 
 		public static HttpWebRequest CreateWebRequest(Uri uri, byte[] auth = null)
 		{
-			if (UAGENT == null)
+			if (UAGENT is null)
 			{
 				throw new NullReferenceException(
 				$"User Agent is not set, call {nameof(SetUserAgent)} method"
 				);
 			}
 			var returncli = (HttpWebRequest)WebRequest.Create(uri);
-			if (auth != null)
+			if (auth is not null)
 			{
 				returncli.Headers.Add("Authorization", "Basic " + Convert.ToBase64String(auth));
 			}
@@ -62,7 +62,7 @@ namespace Skuld.Core.Utilities
 
 		public static HttpClient GetHttpClient()
 		{
-			if (UAGENT == null)
+			if (UAGENT is null)
 			{
 				throw new NullReferenceException(
 					$"User Agent is not set, call {nameof(SetUserAgent)} method"
@@ -184,7 +184,7 @@ namespace Skuld.Core.Utilities
 						doc.Load(response.GetResponseStream(), Encoding.UTF8);
 						request.Abort();
 					}
-					if (doc != null)
+					if (doc is not null)
 						return (doc, response.ResponseUri);
 					else
 						return (null, response.ResponseUri);

@@ -46,7 +46,7 @@ namespace Skuld.Core
 		{
 			var logLevel = GetEnvVar(LogLvlEnvVar);
 
-			if (logLevel != null)
+			if (logLevel is not null)
 			{
 				return (LogSeverity)Enum.Parse(typeof(LogSeverity), logLevel);
 			}

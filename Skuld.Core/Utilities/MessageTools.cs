@@ -33,7 +33,7 @@ namespace Skuld.Core.Utilities
 
             foreach (var prefix in prefixes)
             {
-                if (prefix == null) continue;
+                if (prefix is null) continue;
 
                 if (command.StartsWith(prefix))
                 {
@@ -61,8 +61,8 @@ namespace Skuld.Core.Utilities
 
         public static bool IsEnabledChannel(IGuildUser user, ITextChannel channel)
         {
-            if (channel == null) return true;
-            if (channel.Topic == null) return true;
+            if (channel is null) return true;
+            if (channel.Topic is null) return true;
             if (channel.Topic.ToUpperInvariant().Contains(ModAdminBypass.ToUpperInvariant(), StringComparison.InvariantCulture))
             {
                 if (user.GuildPermissions.Administrator) return true;

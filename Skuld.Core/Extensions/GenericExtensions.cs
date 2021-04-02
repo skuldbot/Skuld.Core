@@ -21,7 +21,7 @@ namespace Skuld.Core.Extensions
 		/// <param name="list">List to shuffle</param>
 		public static void Shuffle<T>(this IList<T> list)
 		{
-			if (list == null)
+			if (list is null)
 			{
 				return;
 			}
@@ -190,7 +190,7 @@ namespace Skuld.Core.Extensions
 
 		public static object Then(this object obj, Action<object> func)
 		{
-			if (func == null)
+			if (func is null)
 			{
 				return null;
 			}
@@ -202,7 +202,7 @@ namespace Skuld.Core.Extensions
 
 		public static object Then<T>(this object obj, Action<T> func)
 		{
-			if (func == null)
+			if (func is null)
 			{
 				return null;
 			}
@@ -214,7 +214,7 @@ namespace Skuld.Core.Extensions
 
 		public static object ThenAsync(this object obj, Func<object, Task<object>> func)
 		{
-			if (func == null)
+			if (func is null)
 			{
 				return obj;
 			}
@@ -224,7 +224,7 @@ namespace Skuld.Core.Extensions
 
 		public static object ThenAfter(this object obj, Action<object> func, int milliseconds)
 		{
-			if (func == null)
+			if (func is null)
 			{
 				return obj;
 			}
@@ -260,7 +260,7 @@ namespace Skuld.Core.Extensions
 
 		public static T As<T>(this object source)
 		{
-			if (source == null)
+			if (source is null)
 			{
 				return default;
 			}

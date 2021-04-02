@@ -113,7 +113,7 @@ namespace Skuld.Core.Extensions.Formatting
 			HtmlDocument htmlDoc = new();
 			htmlDoc.LoadHtml(value);
 
-			if (htmlDoc == null)
+			if (htmlDoc is null)
 				return value;
 
 			return htmlDoc.DocumentNode.InnerText;

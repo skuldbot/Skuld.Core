@@ -23,11 +23,13 @@ namespace Skuld.Core.Utilities
 		private static bool hasBeenConfigured = false;
 		private static ISentryClient sentryClient;
 
-		public static void Configure(ISentryClient sentry)
+		public static void Configure()
 		{
+			bool createdDirectory = false;
 			if (!Directory.Exists(SkuldAppContext.LogDirectory))
 			{
 				Directory.CreateDirectory(SkuldAppContext.LogDirectory);
+				createdDirectory = true;
 			}
 
 			if (!hasBeenConfigured)
@@ -61,9 +63,17 @@ namespace Skuld.Core.Utilities
 						)
 					);
 				}
-
-				sentryClient = sentry;
 			}
+
+			if (createdDirectory)
+			{
+				Log.Verbose("System", "Created Log Directory", null);
+			}
+		}
+
+		public static void ConfigureSentry(ISentryClient sentry)
+		{
+			sentryClient = sentry;
 		}
 
 		private static string Message(string source,
@@ -95,19 +105,19 @@ namespace Skuld.Core.Utilities
 		{
 			var msg = Message(source, message, LogSeverity.Critical);
 
-			if (exception != null)
+			if (exception is not null)
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-				if (sentryClient != null)
+				if (sentryClient is not null)
 				{
 					SentryEvent @event = null;
 
-					if (context != null)
+					if (context is not null)
 					{
 						@event = context.ToSentryEvent(exception);
 					}
-					else if (exception != null)
+					else if (exception is not null)
 					{
 						@event = exception.ToSentryEvent();
 					}
@@ -115,13 +125,13 @@ namespace Skuld.Core.Utilities
 					@event.Level = SentryLevel.Fatal;
 					@event.SetTag("Source", source);
 
-					if (@event != null)
+					if (@event is not null)
 					{
 						sentryClient.CaptureEvent(@event);
 					}
 				}
 
-				if (LogFile != null)
+				if (LogFile is not null)
 				{
 					LogFile.WriteLine(m);
 				}
@@ -133,7 +143,7 @@ namespace Skuld.Core.Utilities
 			}
 			else
 			{
-				if (LogFile != null)
+				if (LogFile is not null)
 				{
 					LogFile.WriteLine(msg);
 				}
@@ -146,7 +156,7 @@ namespace Skuld.Core.Utilities
 
 			Console.ForegroundColor = ConsoleColor.White;
 
-			if (LogFile != null)
+			if (LogFile is not null)
 			{
 				LogFile.Flush();
 			}
@@ -159,15 +169,15 @@ namespace Skuld.Core.Utilities
 		{
 			var msg = Message(source, message, LogSeverity.Debug);
 
-			if (sentryClient != null)
+			if (sentryClient is not null)
 			{
 				SentryEvent @event = null;
 
-				if (context != null)
+				if (context is not null)
 				{
 					@event = context.ToSentryEvent(exception);
 				}
-				else if (exception != null)
+				else if (exception is not null)
 				{
 					@event = exception.ToSentryEvent();
 				}
@@ -175,13 +185,13 @@ namespace Skuld.Core.Utilities
 				@event.Level = SentryLevel.Debug;
 				@event.SetTag("Source", source);
 
-				if (@event != null)
+				if (@event is not null)
 				{
 					sentryClient.CaptureEvent(@event);
 				}
 			}
 
-			if (exception != null)
+			if (exception is not null)
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
@@ -190,7 +200,7 @@ namespace Skuld.Core.Utilities
 					Console.Out.WriteLine(m);
 				}
 
-				if (LogFile != null)
+				if (LogFile is not null)
 				{
 					LogFile.WriteLine(m);
 				}
@@ -202,7 +212,7 @@ namespace Skuld.Core.Utilities
 					Console.Out.WriteLine(msg);
 				}
 
-				if (LogFile != null)
+				if (LogFile is not null)
 				{
 					LogFile.WriteLine(msg);
 				}
@@ -210,7 +220,7 @@ namespace Skuld.Core.Utilities
 
 			Console.ForegroundColor = ConsoleColor.White;
 
-			if (LogFile != null)
+			if (LogFile is not null)
 			{
 				LogFile.Flush();
 			}
@@ -228,19 +238,19 @@ namespace Skuld.Core.Utilities
 				Console.Out.WriteLine(msg);
 			}
 
-			if (exception != null)
+			if (exception is not null)
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-				if (sentryClient != null)
+				if (sentryClient is not null)
 				{
 					SentryEvent @event = null;
 
-					if (context != null)
+					if (context is not null)
 					{
 						@event = context.ToSentryEvent(exception);
 					}
-					else if (exception != null)
+					else if (exception is not null)
 					{
 						@event = exception.ToSentryEvent();
 					}
@@ -248,21 +258,21 @@ namespace Skuld.Core.Utilities
 					@event.Level = SentryLevel.Error;
 					@event.SetTag("Source", source);
 
-					if (@event != null)
+					if (@event is not null)
 					{
 						sentryClient.CaptureEvent(@event);
 					}
 				}
 
 
-				if (LogFile != null)
+				if (LogFile is not null)
 				{
 					LogFile.WriteLine(m);
 				}
 			}
 			else
 			{
-				if (LogFile != null)
+				if (LogFile is not null)
 				{
 					LogFile.WriteLine(msg);
 				}
@@ -270,7 +280,7 @@ namespace Skuld.Core.Utilities
 
 			Console.ForegroundColor = ConsoleColor.White;
 
-			if (LogFile != null)
+			if (LogFile is not null)
 			{
 				LogFile.Flush();
 			}
@@ -287,15 +297,15 @@ namespace Skuld.Core.Utilities
 			{
 				Console.Out.WriteLine(msg);
 
-				if (sentryClient != null)
+				if (sentryClient is not null)
 				{
 					SentryEvent @event = null;
 
-					if (context != null)
+					if (context is not null)
 					{
 						@event = context.ToSentryEvent(exception);
 					}
-					else if (exception != null)
+					else if (exception is not null)
 					{
 						@event = exception.ToSentryEvent();
 					}
@@ -303,25 +313,25 @@ namespace Skuld.Core.Utilities
 					@event.Level = SentryLevel.Info;
 					@event.SetTag("Source", source);
 
-					if (@event != null)
+					if (@event is not null)
 					{
 						sentryClient.CaptureEvent(@event);
 					}
 				}
 			}
 
-			if (exception != null)
+			if (exception is not null)
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-				if (LogFile != null)
+				if (LogFile is not null)
 				{
 					LogFile.WriteLine(m);
 				}
 			}
 			else
 			{
-				if (LogFile != null)
+				if (LogFile is not null)
 				{
 					LogFile.WriteLine(msg);
 				}
@@ -329,7 +339,7 @@ namespace Skuld.Core.Utilities
 
 			Console.ForegroundColor = ConsoleColor.White;
 
-			if (LogFile != null)
+			if (LogFile is not null)
 			{
 				LogFile.Flush();
 			}
@@ -347,19 +357,19 @@ namespace Skuld.Core.Utilities
 				Console.Out.WriteLine(msg);
 			}
 
-			if (exception != null)
+			if (exception is not null)
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-				if (sentryClient != null)
+				if (sentryClient is not null)
 				{
 					SentryEvent @event = null;
 
-					if (context != null)
+					if (context is not null)
 					{
 						@event = context.ToSentryEvent(exception);
 					}
-					else if (exception != null)
+					else if (exception is not null)
 					{
 						@event = exception.ToSentryEvent();
 					}
@@ -367,20 +377,20 @@ namespace Skuld.Core.Utilities
 					@event.Level = SentryLevel.Warning;
 					@event.SetTag("Source", source);
 
-					if (@event != null)
+					if (@event is not null)
 					{
 						sentryClient.CaptureEvent(@event);
 					}
 				}
 
-				if (LogFile != null)
+				if (LogFile is not null)
 				{
 					LogFile.WriteLine(m);
 				}
 			}
 			else
 			{
-				if (LogFile != null)
+				if (LogFile is not null)
 				{
 					LogFile.WriteLine(msg);
 				}
@@ -388,7 +398,7 @@ namespace Skuld.Core.Utilities
 
 			Console.ForegroundColor = ConsoleColor.White;
 
-			if (LogFile != null)
+			if (LogFile is not null)
 			{
 				LogFile.Flush();
 			}
@@ -404,14 +414,14 @@ namespace Skuld.Core.Utilities
 				Console.Out.WriteLine(msg);
 			}
 
-			if (LogFile != null)
+			if (LogFile is not null)
 			{
 				LogFile.WriteLine(msg);
 			}
 
 			Console.ForegroundColor = ConsoleColor.White;
 
-			if (LogFile != null)
+			if (LogFile is not null)
 			{
 				LogFile.Flush();
 			}

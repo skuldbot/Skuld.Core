@@ -90,5 +90,8 @@ namespace Skuld.Core.Extensions.Verification
 
 		public static bool ContainsUpperedInvariant(this string original, string comparison)
 			=> original.ToUpperInvariant().Contains(comparison.ToUpperInvariant());
+
+		public static bool IsNullOrWhiteSpace(this string input)
+			=> string.IsNullOrWhiteSpace(input);
 	}
 }

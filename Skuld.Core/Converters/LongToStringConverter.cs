@@ -8,14 +8,14 @@ namespace Skuld.Core.Converters
 	{
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
-			JToken jt = JValue.ReadFrom(reader);
+			JToken jt = JToken.ReadFrom(reader);
 
-			if (jt.GetType() is long)
+			if (jt.ToObject<object>() is long)
 			{
 				return jt.Value<long>();
 			}
 
-			if (jt.GetType() is ulong)
+			if (jt.ToObject<object>() is ulong)
 			{
 				return jt.Value<ulong>();
 			}

@@ -100,9 +100,7 @@ namespace Skuld.Core.Extensions
 		};
 
 		public static bool AnyStartWith(this IEnumerable<string> collection, string needle)
-		{
-			return collection.Any(x => x.StartsWith(needle));
-		}
+			=> collection.Any(x => x.StartsWith(needle));
 
 		public static bool AnyStartWith(this IEnumerable<string> collection, string needle, out string result)
 		{
@@ -232,25 +230,21 @@ namespace Skuld.Core.Extensions
 
 		public static bool Like(this string origin, string target, int percentage = 50, bool ignoreCaps = true)
 		{
+			return origin.PercentageSimilarity(target, ignoreCaps) >= percentage;
+		}
+
+		public static double PercentageSimilarity(this string origin, string target, bool ignoreCaps = true)
+		{
 			if (ignoreCaps)
 			{
 				origin = origin.ToUpperInvariant();
 				target = target.ToUpperInvariant();
 			}
-
-			Console.WriteLine($"Checking distance between {origin} & {target}");
-
 			int dist = Fastenshtein.Levenshtein.Distance(origin, target);
 
-			Console.WriteLine($"Distance: {dist}");
+			double bigger = Math.Max(origin.Length, target.Length);
 
-			int bigger = Math.Max(origin.Length, target.Length);
-
-			double perc = (bigger - dist) / bigger * 100;
-
-			Console.WriteLine($"Result: {perc}%");
-
-			return perc >= percentage;
+			return ((bigger - dist) / bigger) * 100;
 		}
 	}
 }

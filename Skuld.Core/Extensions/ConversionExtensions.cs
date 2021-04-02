@@ -1,6 +1,7 @@
 ﻿using Discord;
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Skuld.Core.Extensions.Conversion
@@ -14,6 +15,31 @@ namespace Skuld.Core.Extensions.Conversion
 				"false" or "0" or "n" => false,
 				_ => throw new Exception("Cannot Convert from \"" + data + "\" to Boolean"),
 			};
+
+		public static string CreateMD5(this string input, bool lowered = false)
+		{
+			using (MD5 md5 = MD5.Create())
+			{
+				byte[] inputBytes = Encoding.ASCII.GetBytes(input);
+				byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+				// Convert the byte array to hexadecimal string
+				StringBuilder sb = new();
+				for (int i = 0; i < hashBytes.Length; i++)
+				{
+					sb.Append(hashBytes[i].ToString("X2"));
+				}
+
+				string result = sb.ToString();
+
+				if (lowered)
+				{
+					result = result.ToLowerInvariant();
+				}
+
+				return result;
+			}
+		}
 
 		public static MemoryStream ToMemoryStream(this string value)
 			=> new(Encoding.UTF8.GetBytes(value ?? ""));

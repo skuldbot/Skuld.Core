@@ -183,7 +183,7 @@ namespace Skuld.Core.Extensions
 				break;
 			}
 
-			return (highestRole != null ? highestRole.Color : Color.Default);
+			return (highestRole is not null ? highestRole.Color : Color.Default);
 		}
 
 		#endregion Information
@@ -240,7 +240,7 @@ namespace Skuld.Core.Extensions
 
 		public static string ToMessage(this Embed embed)
 		{
-			if (embed == null) return null;
+			if (embed is null) return null;
 
 			string message = "";
 
@@ -296,7 +296,7 @@ namespace Skuld.Core.Extensions
 
 		public static async Task<bool> CanEmbedAsync([NotNull] this IMessageChannel channel, IGuild guild = null)
 		{
-			if (guild == null) return true;
+			if (guild is null) return true;
 			else
 			{
 				var curr = await guild.GetCurrentUserAsync().ConfigureAwait(false);
@@ -307,7 +307,7 @@ namespace Skuld.Core.Extensions
 		}
 
 		public static string JumpLink([NotNull] this IGuildChannel channel)
-			=> $"https://discordapp.com/channels/{channel.GuildId}/{channel.Id}";
+			=> $"https://discord.com/channels/{channel.GuildId}/{channel.Id}";
 
 		public static string GetModulePath([NotNull] this ModuleInfo module)
 		{
@@ -320,11 +320,11 @@ namespace Skuld.Core.Extensions
 
 			ModuleInfo previousModule = module;
 
-			while (previousModule != null)
+			while (previousModule is not null)
 			{
 				path.Append(previousModule.Name ?? previousModule.Group);
 
-				if (previousModule.Parent != null)
+				if (previousModule.Parent is not null)
 				{
 					path.Append('/');
 				}
@@ -346,12 +346,24 @@ namespace Skuld.Core.Extensions
 
 			ModuleInfo previousModule = childModule.Parent;
 
-			while (previousModule.Parent != null)
+			while (previousModule.Parent is not null)
 			{
 				previousModule = previousModule.Parent;
 			}
 
 			return previousModule;
+		}
+
+		public static MessageReference GetReference(this IMessage message)
+		{
+			MessageReference reference = new(message.Id, message.Channel.Id);
+
+			if (message.Channel is IGuildChannel guildChan)
+			{
+				reference = new(message.Id, message.Channel.Id, guildChan.Guild.Id);
+			}
+
+			return reference;
 		}
 	}
 }
