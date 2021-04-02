@@ -21,7 +21,7 @@ namespace Skuld.Core.Utilities
 
 		private static StreamWriter LogFile;
 		private static bool hasBeenConfigured = false;
-		private static ISentryClient sentryClient;
+		private static ISentryClient sentryClient = null;
 
 		public static void Configure()
 		{
@@ -121,6 +121,10 @@ namespace Skuld.Core.Utilities
 					{
 						@event = exception.ToSentryEvent();
 					}
+					else
+					{
+						@event = new SentryEvent();
+					}
 
 					@event.Level = SentryLevel.Fatal;
 					@event.SetTag("Source", source);
@@ -180,6 +184,10 @@ namespace Skuld.Core.Utilities
 				else if (exception is not null)
 				{
 					@event = exception.ToSentryEvent();
+				}
+				else
+				{
+					@event = new SentryEvent();
 				}
 
 				@event.Level = SentryLevel.Debug;
@@ -253,6 +261,10 @@ namespace Skuld.Core.Utilities
 					else if (exception is not null)
 					{
 						@event = exception.ToSentryEvent();
+					}
+					else
+					{
+						@event = new SentryEvent();
 					}
 
 					@event.Level = SentryLevel.Error;
