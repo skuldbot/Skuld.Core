@@ -109,29 +109,27 @@ namespace Skuld.Core.Utilities
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-				if (sentryClient is not null)
+				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Critical || exception is not null)
 				{
-					SentryEvent @event = null;
+					if (sentryClient is not null)
+					{
+						SentryEvent @event;
+						if (context is not null)
+						{
+							@event = context.ToSentryEvent(exception);
+						}
+						else
+						{
+							@event = exception.ToSentryEvent();
+						}
 
-					if (context is not null)
-					{
-						@event = context.ToSentryEvent(exception);
-					}
-					else if (exception is not null)
-					{
-						@event = exception.ToSentryEvent();
-					}
-					else
-					{
-						@event = new SentryEvent();
-					}
+						@event.Level = SentryLevel.Fatal;
+						@event.SetTag("Source", source);
 
-					@event.Level = SentryLevel.Fatal;
-					@event.SetTag("Source", source);
-
-					if (@event is not null)
-					{
-						sentryClient.CaptureEvent(@event);
+						if (@event is not null)
+						{
+							sentryClient.CaptureEvent(@event);
+						}
 					}
 				}
 
@@ -173,29 +171,27 @@ namespace Skuld.Core.Utilities
 		{
 			var msg = Message(source, message, LogSeverity.Debug);
 
-			if (sentryClient is not null)
+			if (SkuldAppContext.GetLogLevel() >= LogSeverity.Debug || exception is not null)
 			{
-				SentryEvent @event = null;
+				if (sentryClient is not null)
+				{
+					SentryEvent @event;
+					if (context is not null)
+					{
+						@event = context.ToSentryEvent(exception);
+					}
+					else
+					{
+						@event = exception.ToSentryEvent();
+					}
 
-				if (context is not null)
-				{
-					@event = context.ToSentryEvent(exception);
-				}
-				else if (exception is not null)
-				{
-					@event = exception.ToSentryEvent();
-				}
-				else
-				{
-					@event = new SentryEvent();
-				}
+					@event.Level = SentryLevel.Debug;
+					@event.SetTag("Source", source);
 
-				@event.Level = SentryLevel.Debug;
-				@event.SetTag("Source", source);
-
-				if (@event is not null)
-				{
-					sentryClient.CaptureEvent(@event);
+					if (@event is not null)
+					{
+						sentryClient.CaptureEvent(@event);
+					}
 				}
 			}
 
@@ -250,32 +246,29 @@ namespace Skuld.Core.Utilities
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-				if (sentryClient is not null)
+				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Error || exception is not null)
 				{
-					SentryEvent @event = null;
+					if (sentryClient is not null)
+					{
+						SentryEvent @event;
+						if (context is not null)
+						{
+							@event = context.ToSentryEvent(exception);
+						}
+						else
+						{
+							@event = exception.ToSentryEvent();
+						}
 
-					if (context is not null)
-					{
-						@event = context.ToSentryEvent(exception);
-					}
-					else if (exception is not null)
-					{
-						@event = exception.ToSentryEvent();
-					}
-					else
-					{
-						@event = new SentryEvent();
-					}
+						@event.Level = SentryLevel.Error;
+						@event.SetTag("Source", source);
 
-					@event.Level = SentryLevel.Error;
-					@event.SetTag("Source", source);
-
-					if (@event is not null)
-					{
-						sentryClient.CaptureEvent(@event);
+						if (@event is not null)
+						{
+							sentryClient.CaptureEvent(@event);
+						}
 					}
 				}
-
 
 				if (LogFile is not null)
 				{
@@ -309,25 +302,27 @@ namespace Skuld.Core.Utilities
 			{
 				Console.Out.WriteLine(msg);
 
-				if (sentryClient is not null)
+				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Verbose || exception is not null)
 				{
-					SentryEvent @event = null;
-
-					if (context is not null)
+					if (sentryClient is not null)
 					{
-						@event = context.ToSentryEvent(exception);
-					}
-					else if (exception is not null)
-					{
-						@event = exception.ToSentryEvent();
-					}
+						SentryEvent @event;
+						if (context is not null)
+						{
+							@event = context.ToSentryEvent(exception);
+						}
+						else
+						{
+							@event = exception.ToSentryEvent();
+						}
 
-					@event.Level = SentryLevel.Info;
-					@event.SetTag("Source", source);
+						@event.Level = SentryLevel.Debug;
+						@event.SetTag("Source", source);
 
-					if (@event is not null)
-					{
-						sentryClient.CaptureEvent(@event);
+						if (@event is not null)
+						{
+							sentryClient.CaptureEvent(@event);
+						}
 					}
 				}
 			}
@@ -373,25 +368,27 @@ namespace Skuld.Core.Utilities
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-				if (sentryClient is not null)
+				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Warning || exception is not null)
 				{
-					SentryEvent @event = null;
-
-					if (context is not null)
+					if (sentryClient is not null)
 					{
-						@event = context.ToSentryEvent(exception);
-					}
-					else if (exception is not null)
-					{
-						@event = exception.ToSentryEvent();
-					}
+						SentryEvent @event;
+						if (context is not null)
+						{
+							@event = context.ToSentryEvent(exception);
+						}
+						else
+						{
+							@event = exception.ToSentryEvent();
+						}
 
-					@event.Level = SentryLevel.Warning;
-					@event.SetTag("Source", source);
+						@event.Level = SentryLevel.Warning;
+						@event.SetTag("Source", source);
 
-					if (@event is not null)
-					{
-						sentryClient.CaptureEvent(@event);
+						if (@event is not null)
+						{
+							sentryClient.CaptureEvent(@event);
+						}
 					}
 				}
 
