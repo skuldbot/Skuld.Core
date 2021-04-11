@@ -54,6 +54,15 @@ namespace Skuld.Core.Models
 				Exception = ex
 			};
 
+		public static EventResult FromFailureException(object data, string reason, Exception ex)
+			=> new EventResult()
+			{
+				Successful = false,
+				Error = reason,
+				Exception = ex,
+				Data = data
+			};
+
 		public EventResult IsError(Action<EventResult> func)
 		{
 			if (!Successful)
