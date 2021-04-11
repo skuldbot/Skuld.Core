@@ -42,7 +42,7 @@ namespace Skuld.Core
 
 		public static void SetConfigurationId(string inId) => ConfigurationId = inId;
 
-		public static LogSeverity GetLogLevel()
+		public static LogSeverity GetLogSeverity()
 		{
 			var logLevel = GetEnvVar(LogLvlEnvVar);
 

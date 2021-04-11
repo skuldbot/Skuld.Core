@@ -248,14 +248,14 @@ namespace Skuld.Core.Extensions
 			return obj;
 		}
 
-		public static EventResult<T> Is<T>(this object source)
+		public static EventResult Is<T>(this object source)
 		{
 			if (source is T t)
 			{
-				return EventResult<T>.FromSuccess<T>(t);
+				return EventResult.FromSuccess(t);
 			}
 
-			return EventResult<T>.FromFailure<T>(default, $"{source} is not of type: {typeof(T).Name}");
+			return EventResult.FromFailure($"{source} is not of type: {typeof(T).Name}");
 		}
 
 		public static T As<T>(this object source)

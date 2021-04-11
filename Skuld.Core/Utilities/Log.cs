@@ -109,7 +109,7 @@ namespace Skuld.Core.Utilities
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Critical || exception is not null)
+				if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Critical || exception is not null)
 				{
 					if (sentryClient is not null)
 					{
@@ -138,7 +138,7 @@ namespace Skuld.Core.Utilities
 					LogFile.WriteLine(m);
 				}
 
-				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Critical)
+				if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Critical)
 				{
 					Console.Out.WriteLine(m);
 				}
@@ -150,7 +150,7 @@ namespace Skuld.Core.Utilities
 					LogFile.WriteLine(msg);
 				}
 
-				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Critical)
+				if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Critical)
 				{
 					Console.Out.WriteLine(msg);
 				}
@@ -171,7 +171,7 @@ namespace Skuld.Core.Utilities
 		{
 			var msg = Message(source, message, LogSeverity.Debug);
 
-			if (SkuldAppContext.GetLogLevel() >= LogSeverity.Debug || exception is not null)
+			if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Debug || exception is not null)
 			{
 				if (sentryClient is not null)
 				{
@@ -199,7 +199,7 @@ namespace Skuld.Core.Utilities
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Debug)
+				if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Debug)
 				{
 					Console.Out.WriteLine(m);
 				}
@@ -211,7 +211,7 @@ namespace Skuld.Core.Utilities
 			}
 			else
 			{
-				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Debug)
+				if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Debug)
 				{
 					Console.Out.WriteLine(msg);
 				}
@@ -237,7 +237,7 @@ namespace Skuld.Core.Utilities
 		{
 			var msg = Message(source, message, LogSeverity.Error);
 
-			if (SkuldAppContext.GetLogLevel() >= LogSeverity.Error)
+			if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Error)
 			{
 				Console.Out.WriteLine(msg);
 			}
@@ -246,7 +246,7 @@ namespace Skuld.Core.Utilities
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Error || exception is not null)
+				if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Error || exception is not null)
 				{
 					if (sentryClient is not null)
 					{
@@ -275,12 +275,9 @@ namespace Skuld.Core.Utilities
 					LogFile.WriteLine(m);
 				}
 			}
-			else
+			else if (LogFile is not null)
 			{
-				if (LogFile is not null)
-				{
-					LogFile.WriteLine(msg);
-				}
+				LogFile.WriteLine(msg);
 			}
 
 			Console.ForegroundColor = ConsoleColor.White;
@@ -298,11 +295,11 @@ namespace Skuld.Core.Utilities
 		{
 			var msg = Message(source, message, LogSeverity.Verbose);
 
-			if (SkuldAppContext.GetLogLevel() >= LogSeverity.Verbose)
+			if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Verbose)
 			{
 				Console.Out.WriteLine(msg);
 
-				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Verbose || exception is not null)
+				if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Verbose || exception is not null)
 				{
 					if (sentryClient is not null)
 					{
@@ -336,12 +333,9 @@ namespace Skuld.Core.Utilities
 					LogFile.WriteLine(m);
 				}
 			}
-			else
+			else if (LogFile is not null)
 			{
-				if (LogFile is not null)
-				{
-					LogFile.WriteLine(msg);
-				}
+				LogFile.WriteLine(msg);
 			}
 
 			Console.ForegroundColor = ConsoleColor.White;
@@ -359,7 +353,7 @@ namespace Skuld.Core.Utilities
 		{
 			var msg = Message(source, message, LogSeverity.Warning);
 
-			if (SkuldAppContext.GetLogLevel() >= LogSeverity.Warning)
+			if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Warning)
 			{
 				Console.Out.WriteLine(msg);
 			}
@@ -368,7 +362,7 @@ namespace Skuld.Core.Utilities
 			{
 				var m = msg + "EXTRA INFORMATION:\n" + exception.ToString();
 
-				if (SkuldAppContext.GetLogLevel() >= LogSeverity.Warning || exception is not null)
+				if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Warning || exception is not null)
 				{
 					if (sentryClient is not null)
 					{
@@ -397,12 +391,9 @@ namespace Skuld.Core.Utilities
 					LogFile.WriteLine(m);
 				}
 			}
-			else
+			else if (LogFile is not null)
 			{
-				if (LogFile is not null)
-				{
-					LogFile.WriteLine(msg);
-				}
+				LogFile.WriteLine(msg);
 			}
 
 			Console.ForegroundColor = ConsoleColor.White;
@@ -416,9 +407,10 @@ namespace Skuld.Core.Utilities
 		public static void Info(string source,
 								string message)
 		{
+
 			var msg = Message(source, message, LogSeverity.Info);
 
-			if (SkuldAppContext.GetLogLevel() >= LogSeverity.Info)
+			if (SkuldAppContext.GetLogSeverity() >= LogSeverity.Info)
 			{
 				Console.Out.WriteLine(msg);
 			}
