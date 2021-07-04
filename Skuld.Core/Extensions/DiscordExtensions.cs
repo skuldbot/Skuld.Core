@@ -365,5 +365,13 @@ namespace Skuld.Core.Extensions
 
 			return reference;
 		}
+
+		public static bool IsFullyConnected(this IDiscordClient discordClient)
+		{
+			if (discordClient is DiscordShardedClient sharded)
+				return sharded.Shards.All(socket => socket.IsFullyConnected());
+
+			return discordClient.ConnectionState == ConnectionState.Connected;
+		}
 	}
 }

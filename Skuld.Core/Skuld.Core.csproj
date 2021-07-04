@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <AssemblyVersion>2020.6.15.0</AssemblyVersion>
     <FileVersion>2020.6.15.0</FileVersion>
     <LangVersion>preview</LangVersion>
@@ -11,10 +11,10 @@
     <PackageReference Include="Discord.Net" Version="2.3.1" />
     <PackageReference Include="dotenv.net" Version="3.0.0" />
     <PackageReference Include="Fastenshtein" Version="1.0.0.7" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.32" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.34" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NodaTime" Version="3.0.5" />
-    <PackageReference Include="Sentry" Version="3.3.1" />
+    <PackageReference Include="Sentry" Version="3.6.0-alpha.2" />
   </ItemGroup>
   
 </Project>

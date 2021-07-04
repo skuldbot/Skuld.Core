@@ -12,7 +12,7 @@ namespace Skuld.Core.Helpers
 		{
 			List<string> inputSplit = input.Split(" ").ToList();
 
-			int d = 0, h = 0, m = 0, s = 0;
+			int d = 0, h = 0, m = 0, s = 0, ms = 0;
 
 			if (inputSplit.Any(x => x.ContainsUpperedInvariant("days")))
 			{
@@ -40,7 +40,7 @@ namespace Skuld.Core.Helpers
 					d = Convert.ToInt32(key.Replace("day", "").Replace("DAY", ""), CultureInfo.InvariantCulture);
 				}
 			}
-			else if (inputSplit.Any(x => x.ContainsUpperedInvariant("d") && x.Length == 1))
+			else if (inputSplit.Any(x => x.ContainsUpperedInvariant("d")))
 			{
 				d = Convert.ToInt32(inputSplit.FirstOrDefault(x => x.ContainsUpperedInvariant("d")).Replace("d", "").Replace("D", ""), CultureInfo.InvariantCulture);
 			}
@@ -71,7 +71,7 @@ namespace Skuld.Core.Helpers
 					h = Convert.ToInt32(key.Replace("hour", "").Replace("HOUR", ""), CultureInfo.InvariantCulture);
 				}
 			}
-			else if (inputSplit.Any(x => x.ContainsUpperedInvariant("h") && x.Length == 1))
+			else if (inputSplit.Any(x => x.ContainsUpperedInvariant("h")))
 			{
 				h = Convert.ToInt32(inputSplit.FirstOrDefault(x => x.ContainsUpperedInvariant("h")).Replace("h", "").Replace("H", ""), CultureInfo.InvariantCulture);
 			}
@@ -102,7 +102,7 @@ namespace Skuld.Core.Helpers
 					m = Convert.ToInt32(key.Replace("minute", "").Replace("MINUTE", ""), CultureInfo.InvariantCulture);
 				}
 			}
-			else if (inputSplit.Any(x => x.ContainsUpperedInvariant("m") && x.Length == 1))
+			else if (inputSplit.Any(x => x.ContainsUpperedInvariant("m") && !x.ContainsUpperedInvariant("ms")))
 			{
 				m = Convert.ToInt32(inputSplit.FirstOrDefault(x => x.ContainsUpperedInvariant("m")).Replace("m", "").Replace("M", ""), CultureInfo.InvariantCulture);
 			}
@@ -133,14 +133,45 @@ namespace Skuld.Core.Helpers
 					s = Convert.ToInt32(key.Replace("second", "").Replace("SECOND", ""), CultureInfo.InvariantCulture);
 				}
 			}
-			else if (inputSplit.Any(x => x.ContainsUpperedInvariant("s") && x.Length == 1))
+			else if (inputSplit.Any(x => x.ContainsUpperedInvariant("s") && !x.ContainsUpperedInvariant("ms")))
 			{
 				s = Convert.ToInt32(inputSplit.FirstOrDefault(x => x.ContainsUpperedInvariant("s")).Replace("s", "").Replace("S", ""), CultureInfo.InvariantCulture);
 			}
 
-			if (d != 0 || h != 0 || m != 0 || s != 0)
+			if (inputSplit.Any(x => x.ContainsUpperedInvariant("milliseconds")))
 			{
-				return new TimeSpan(d, h, m, s);
+				var key = inputSplit.FirstOrDefault(x => x.ContainsUpperedInvariant("milliseconds"));
+
+				if (key.IsSameUpperedInvariant("milliseconds"))
+				{
+					ms = Convert.ToInt32(inputSplit[inputSplit.IndexOf(key) - 1], CultureInfo.InvariantCulture);
+				}
+				else
+				{
+					ms = Convert.ToInt32(key.Replace("milliseconds", "").Replace("MILLISECONDS", ""), CultureInfo.InvariantCulture);
+				}
+			}
+			else if (inputSplit.Any(x => x.ContainsUpperedInvariant("millisecond")))
+			{
+				var key = inputSplit.FirstOrDefault(x => x.ContainsUpperedInvariant("millisecond"));
+
+				if (key.IsSameUpperedInvariant("millisecond"))
+				{
+					ms = Convert.ToInt32(inputSplit[inputSplit.IndexOf(key) - 1], CultureInfo.InvariantCulture);
+				}
+				else
+				{
+					ms = Convert.ToInt32(key.Replace("millisecond", "").Replace("MILLISECOND", ""), CultureInfo.InvariantCulture);
+				}
+			}
+			else if (inputSplit.Any(x => x.ContainsUpperedInvariant("ms")))
+			{
+				ms = Convert.ToInt32(inputSplit.FirstOrDefault(x => x.ContainsUpperedInvariant("ms")).Replace("ms", "").Replace("MS", ""), CultureInfo.InvariantCulture);
+			}
+
+			if (d != 0 || h != 0 || m != 0 || s != 0 || ms != 0)
+			{
+				return new TimeSpan(d, h, m, s, ms);
 			}
 
 			return null;
